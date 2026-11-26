@@ -1,0 +1,3182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VORTEX TITAN 6.0 — Flagship Synthesizer, 3D–5D Pad & Sounds ID Workstation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-chassis: #0b0d12;
+      --bg-panel: #131722;
+      --bg-card: #1a1f2e;
+      --accent-cyan: #00f0ff;
+      --accent-amber: #ff9d00;
+      --accent-acid: #39ff14;
+      --accent-magenta: #ff2a85;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+    }
+
+    body.skin-acid {
+      --bg-chassis: #070d08;
+      --accent-cyan: #39ff14;
+      --accent-amber: #facc15;
+      --accent-magenta: #a3e635;
+    }
+    body.skin-crimson {
+      --bg-chassis: #11080b;
+      --accent-cyan: #ff2a55;
+      --accent-amber: #ff8c00;
+      --accent-magenta: #f43f5e;
+    }
+    body.skin-titanium {
+      --bg-chassis: #0e1015;
+      --accent-cyan: #e2e8f0;
+      --accent-amber: #38bdf8;
+      --accent-magenta: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-chassis);
+      color: #e2e8f0;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease;
+    }
+
+    .font-mono-tech {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .synth-chassis {
+      background: radial-gradient(circle at 50% 0%, #1d2436 0%, #0b0d12 75%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .module-panel {
+      background: linear-gradient(180deg, #171c29 0%, #111520 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .knob-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: ns-resize;
+    }
+
+    .knob-dial {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: conic-gradient(from 220deg, #1e2536 0%, #0e121b 100%);
+      border: 2px solid #2c354d;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 2px 3px rgba(255, 255, 255, 0.1);
+      position: relative;
+      transition: border-color 0.15s ease;
+    }
+
+    .knob-dial:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .knob-indicator {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      width: 3px;
+      height: 11px;
+      background: var(--accent-cyan);
+      border-radius: 2px;
+      transform-origin: 50% 15px;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .knob-acid .knob-indicator {
+      background: var(--accent-acid);
+      box-shadow: 0 0 8px var(--accent-acid);
+    }
+
+    .knob-amber .knob-indicator {
+      background: var(--accent-amber);
+      box-shadow: 0 0 8px var(--accent-amber);
+    }
+
+    .knob-magenta .knob-indicator {
+      background: var(--accent-magenta);
+      box-shadow: 0 0 8px var(--accent-magenta);
+    }
+
+    input[type="range"].synth-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #0d1017;
+      height: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    input[type="range"].synth-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .piano-white {
+      background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+      border: 1px solid #475569;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      transition: transform 0.05s, background 0.05s;
+    }
+
+    .piano-white.active, .piano-white:active {
+      background: linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%);
+      transform: translateY(2px);
+    }
+
+    .piano-black {
+      background: linear-gradient(180deg, #1e293b 0%, #090d16 100%);
+      border: 1px solid #000;
+      border-radius: 0 0 4px 4px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+      transition: transform 0.05s, background 0.05s;
+    }
+
+    .piano-black.active, .piano-black:active {
+      background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+      transform: translateY(2px);
+    }
+
+    .led-on {
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0d12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b354b;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-2 sm:p-4 lg:p-6 flex flex-col items-center justify-center">
+
+  <div class="synth-chassis w-full max-w-[1480px] rounded-2xl p-3 sm:p-5 flex flex-col gap-4">
+
+    <!-- TOP MASTER HEADER & PRESET / TRANSPORT BAR -->
+    <header class="module-panel rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
+          <span class="font-extrabold text-slate-950 text-base">VT6</span>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-wider text-white">VORTEX TITAN <span class="text-cyan-400">6.0</span></h1>
+            <span class="px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 rounded-full">SUPERINTENDENT HYBRID</span>
+            <button id="midiStatusBadge" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-slate-800 text-slate-400 border border-slate-700 rounded-full cursor-pointer" title="Click to scan Web MIDI / MPE devices">MIDI: SCANNING</button>
+            <button id="soundsIdBadge" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 rounded-full cursor-pointer" title="Open Sounds ID Acoustic & Patch Identifier">SOUNDS ID: READY</button>
+            <button id="micInputBtn" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 rounded-full cursor-pointer" title="Toggle Live Mic / External Audio Analysis for Sounds ID">MIC ID: OFF</button>
+          </div>
+          <p class="text-[11px] text-slate-400">Hybrid Morph • String Resonator • Kick Sidechain • 3D–5D XY&Z Pad • 128-Step 303 & 909 • Sounds ID</p>
+        </div>
+      </div>
+
+      <!-- Preset Selector, Skin Theme & Patch JSON I/O -->
+      <div class="flex flex-wrap items-center gap-1.5 bg-slate-950/70 p-1.5 rounded-xl border border-slate-800">
+        <button id="prevPresetBtn" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold" title="Previous Preset">◀</button>
+        <select id="presetSelect" class="bg-slate-900 text-cyan-300 font-mono-tech text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-700 focus:outline-none focus:border-cyan-400 min-w-[190px]">
+          <option value="cyber_acid">01. ACID REBIRTH 303 (Legato)</option>
+          <option value="quantum_supersaw">02. HYPERION SUPERSAW LEAD</option>
+          <option value="spectral_pad">03. NEBULA GRANULAR CLOUD</option>
+          <option value="sub_reese">04. DARK MATTER FM REESE</option>
+          <option value="psy_arp">05. GOA QUANTUM ARP 142</option>
+          <option value="blade_brass">06. CYBERPUNK ANALOG BRASS</option>
+        </select>
+        <button id="nextPresetBtn" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-bold" title="Next Preset">▶</button>
+        <button id="randomizePatchBtn" class="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white text-xs font-bold flex items-center gap-1 shadow-md shadow-fuchsia-600/20 transition" title="Auto-Dice Patch Generator">
+          <span>🎲</span> DICE
+        </button>
+        <button id="exportPatchBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-mono-tech font-bold" title="Save Patch as JSON">SAVE</button>
+        <button id="importPatchBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono-tech font-bold" title="Load Patch JSON">LOAD</button>
+        <input id="importPatchFile" type="file" accept=".json" class="hidden" />
+        <select id="skinSelect" class="bg-slate-900 text-amber-300 font-mono-tech text-[11px] px-2 py-1.5 rounded-lg border border-slate-700" title="Custom Hardware Skin">
+          <option value="default">SKIN: CYBER CYAN</option>
+          <option value="acid">SKIN: ACID VOLT</option>
+          <option value="crimson">SKIN: CRIMSON ANALOG</option>
+          <option value="titanium">SKIN: TITANIUM</option>
+        </select>
+      </div>
+
+      <!-- Master Transport, WAV Recorder, BPM & Master Volume -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-1.5 bg-slate-950/80 px-2.5 py-1.5 rounded-xl border border-slate-800">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">BPM</span>
+          <input id="bpmInput" type="number" min="60" max="220" value="136" class="w-11 bg-transparent text-amber-400 font-mono-tech font-bold text-sm text-center focus:outline-none" />
+        </div>
+
+        <button id="seqPlayBtn" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center gap-1.5 transition">
+          <span id="seqPlayIcon">▶</span> <span id="seqPlayLabel">PLAY</span>
+        </button>
+
+        <button id="wavRecBtn" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center gap-1 transition" title="Record Stereo Audio">
+          <span id="wavRecDot" class="w-2 h-2 rounded-full bg-amber-400"></span> <span id="wavRecLabel">REC AUDIO</span>
+        </button>
+
+        <button id="panicBtn" class="px-2.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-xs transition" title="All Notes Off">
+          PANIC
+        </button>
+
+        <div class="flex items-center gap-1.5 bg-slate-950/80 px-2.5 py-1.5 rounded-xl border border-slate-800">
+          <span class="text-[10px] font-bold text-cyan-400">VOL</span>
+          <input id="masterVolSlider" type="range" min="0" max="1" step="0.01" value="0.78" class="synth-slider w-16" />
+        </div>
+      </div>
+    </header>
+
+    <!-- ROW 2: OSCILLOSCOPE / FFT + SOUNDS ID OVERLAY + MACROS + 3D–5D XY&Z MORPH PAD -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div class="lg:col-span-5 module-panel rounded-xl p-3 flex flex-col justify-between gap-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 led-on"></span>
+            <span class="text-xs font-bold tracking-wider uppercase text-slate-300">Quantum Oscilloscope & FFT</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button id="scopeModeWave" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold rounded bg-slate-800 text-slate-400">WAVE</button>
+            <button id="scopeModeFFT" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold rounded bg-slate-800 text-slate-400">FFT</button>
+            <button id="scopeModeDual" class="px-2 py-0.5 text-[10px] font-mono-tech font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">HYBRID</button>
+          </div>
+        </div>
+        <div class="relative w-full h-28 bg-slate-950 rounded-lg border border-slate-800/90 overflow-hidden">
+          <canvas id="visualizerCanvas" class="w-full h-full block"></canvas>
+          <div id="soundsIdOverlay" class="hidden absolute top-2 right-2 bg-slate-950/90 border border-indigo-500/40 rounded-lg px-2.5 py-1.5 text-[10px] font-mono-tech text-indigo-200 shadow-lg max-w-[240px]">
+            <div class="flex items-center justify-between gap-2 font-extrabold text-indigo-300">
+              <span>SOUNDS ID</span>
+              <span id="soundsIdConfidence" class="text-emerald-400">94%</span>
+            </div>
+            <div id="soundsIdMatchName" class="text-white font-bold truncate mt-0.5">ACID REBIRTH 303</div>
+            <div id="soundsIdMeta" class="text-slate-400 text-[9px] truncate">130.8 Hz (C3) • 303 Acid Resonant</div>
+          </div>
+          <div id="audioInitOverlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center cursor-pointer">
+            <span class="px-4 py-1.5 rounded-full bg-cyan-500 text-slate-950 font-extrabold text-xs tracking-wide shadow-lg shadow-cyan-500/40 animate-pulse">
+              ⚡ CLICK ANY KEY OR HERE TO IGNITE AUDIO ENGINE
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 module-panel rounded-xl p-3 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400 led-on"></span>
+            <span class="text-xs font-bold tracking-wider uppercase text-slate-300">Performance Macros & Superintendent Hybrid</span>
+          </div>
+          <span id="statusToast" class="text-[11px] font-mono-tech text-cyan-300">READY • QUANTUM DSP ONLINE</span>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 pt-1">
+          <div class="knob-container knob-amber bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="macroAcid" data-min="0" data-max="1" data-val="0.55">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-amber-300 mt-1">ACID SCREAM</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">55%</span>
+          </div>
+          <div class="knob-container bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="macroSpace" data-min="0" data-max="1" data-val="0.40">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-cyan-300 mt-1">Q4NTUM SPACE</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">40%</span>
+          </div>
+          <div class="knob-container knob-magenta bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="macroGrit" data-min="0" data-max="1" data-val="0.30">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-fuchsia-300 mt-1">PEDAL CRUSH</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">30%</span>
+          </div>
+          <div class="knob-container knob-acid bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="hybridMorph" data-min="0" data-max="1" data-val="0.45">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-emerald-300 mt-1">HYBRID MORPH</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">45%</span>
+          </div>
+          <div class="knob-container bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="resonatorMix" data-min="0" data-max="1" data-val="0.25">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-sky-300 mt-1">RESONATOR</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">25%</span>
+          </div>
+          <div class="knob-container knob-amber bg-slate-950/60 p-2 rounded-xl border border-slate-800/80" data-param="sidechainDepth" data-min="0" data-max="1" data-val="0.40">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-amber-300 mt-1">SIDECHAIN DUCK</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-400">40%</span>
+          </div>
+        </div>
+
+        <!-- Superintendent 3D–5D XY&Z Chaos Morph Pad -->
+        <div class="mt-2.5 bg-slate-950/85 p-2.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center gap-3">
+          <div id="xyMorphPad" class="relative w-full sm:w-52 h-20 rounded-lg bg-gradient-to-tr from-slate-900 via-slate-900 to-cyan-950/50 border border-cyan-500/30 cursor-crosshair overflow-hidden shrink-0">
+            <div class="absolute inset-0 pointer-events-none opacity-25" style="background-image: linear-gradient(to right, rgba(0,240,255,0.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,240,255,0.25) 1px, transparent 1px); background-size: 26px 20px;"></div>
+            <div id="xyPuck" class="w-4 h-4 -ml-2 -mt-2 rounded-full bg-cyan-400 border-2 border-white shadow-[0_0_12px_#00f0ff] absolute top-1/2 left-1/2 pointer-events-none transition-transform duration-75"></div>
+          </div>
+          <div class="flex sm:flex-col justify-between sm:justify-center items-center sm:items-stretch gap-1 w-full sm:w-24 bg-slate-900/80 px-2 py-1.5 rounded-lg border border-slate-800 shrink-0">
+            <div class="flex items-center justify-between text-[9px] font-mono-tech font-bold text-amber-300">
+              <span>Z-AXIS</span>
+              <span id="zAxisVal">50%</span>
+            </div>
+            <input id="zAxisSlider" type="range" min="0" max="1" step="0.01" value="0.5" class="synth-slider w-20 sm:w-full" title="Z-Axis Depth: Hybrid Morph & Resonator" />
+            <div class="flex items-center justify-between text-[9px] font-mono-tech font-bold text-fuchsia-300">
+              <span>4D/5D</span>
+              <span id="hyperAxisVal">50%</span>
+            </div>
+            <input id="hyperAxisSlider" type="range" min="0" max="1" step="0.01" value="0.5" class="synth-slider w-20 sm:w-full" title="4D/5D Hyper-Dimension: Sidechain & FM/Grit" />
+          </div>
+          <div class="flex-1 flex flex-col justify-between gap-1 text-[10px] font-mono-tech w-full">
+            <div class="flex items-center justify-between gap-1.5">
+              <span class="font-extrabold text-cyan-300 uppercase">3D–5D XY&Z MORPH PAD</span>
+              <div class="flex items-center gap-1">
+                <button id="dimModeBtn" class="px-1.5 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 font-bold" title="Cycle 3D / 4D / 5D Dimension Coupling">DIM: 5D</button>
+                <button id="xySpringBtn" class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">MODE: SPRING</button>
+              </div>
+            </div>
+            <span class="text-slate-400">X: <strong class="text-emerald-300">Cutoff</strong> • Y: <strong class="text-fuchsia-300">Res/Space</strong> • Z: <strong class="text-amber-300">Morph/Reso</strong> • 4D/5D: <strong class="text-cyan-300">SC/FM</strong></span>
+            <span id="xyReadout" class="text-cyan-400">[5D] X:50% Y:50% Z:50% 4D/5D:50%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3: OSCILLATORS + T-BEE 303 FILTER + ENVELOPES & LFO -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div class="lg:col-span-5 module-panel rounded-xl p-3.5 flex flex-col gap-2.5">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 led-on"></span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-white">Multi-Engine Oscillator Bank</h2>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="voiceModeBtn" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono-tech text-[10px] font-bold">MODE: MONO LEGATO</button>
+            <button id="granularToggleBtn" class="px-2 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 font-mono-tech text-[10px] font-bold">GRANULAR: OFF</button>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/75 rounded-xl p-2.5 border border-slate-800/90 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <button id="osc1Toggle" class="px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-extrabold text-[10px]">OSC 1</button>
+              <select id="osc1Wave" class="bg-slate-900 text-slate-200 text-xs font-mono-tech px-2 py-1 rounded border border-slate-700">
+                <option value="tb_square">TB-303 Diode Square</option>
+                <option value="hybrid_morph">Superintendent Hybrid Morph</option>
+                <option value="sawtooth">Super Sawtooth</option>
+                <option value="square">Hollow Square</option>
+                <option value="triangle">Pure Triangle</option>
+                <option value="spectral_harm">Spectral Harmonic</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5 text-[11px] font-mono-tech">
+              <span class="text-slate-400">OCT</span>
+              <select id="osc1Oct" class="bg-slate-900 text-cyan-300 px-1.5 py-0.5 rounded border border-slate-700">
+                <option value="-2">-2</option>
+                <option value="-1" selected>-1</option>
+                <option value="0">0</option>
+                <option value="1">+1</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-2 pt-1">
+            <div class="knob-container" data-param="osc1Detune" data-min="0" data-max="50" data-val="12">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-slate-400">DETUNE</span>
+              <span class="knob-val text-[10px] font-mono-tech text-cyan-300">12ct</span>
+            </div>
+            <div class="knob-container" data-param="osc1Unison" data-min="1" data-max="5" data-val="2" data-step="1">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-slate-400">VOICES</span>
+              <span class="knob-val text-[10px] font-mono-tech text-cyan-300">2</span>
+            </div>
+            <div class="knob-container knob-acid" data-param="tbSquareMorph" data-min="0" data-max="1" data-val="0.72">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-emerald-400">TB-MORPH</span>
+              <span class="knob-val text-[10px] font-mono-tech text-emerald-300">72%</span>
+            </div>
+            <div class="knob-container" data-param="osc1Level" data-min="0" data-max="1" data-val="0.88">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-slate-400">LEVEL</span>
+              <span class="knob-val text-[10px] font-mono-tech text-cyan-300">88%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/75 rounded-xl p-2.5 border border-slate-800/90 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <button id="osc2Toggle" class="px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-extrabold text-[10px]">OSC 2</button>
+              <select id="osc2Wave" class="bg-slate-900 text-slate-200 text-xs font-mono-tech px-2 py-1 rounded border border-slate-700">
+                <option value="sawtooth" selected>Analog Sawtooth</option>
+                <option value="hybrid_morph">Superintendent Hybrid Morph</option>
+                <option value="tb_square">TB-303 Diode Square</option>
+                <option value="square">Pulse Width 25%</option>
+                <option value="triangle">Sub Triangle</option>
+                <option value="sine">FM Sine Carrier</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5 text-[11px] font-mono-tech">
+              <span class="text-slate-400">SEMI</span>
+              <select id="osc2Semi" class="bg-slate-900 text-cyan-300 px-1.5 py-0.5 rounded border border-slate-700">
+                <option value="-12">-12</option>
+                <option value="-5">-5</option>
+                <option value="0" selected>0</option>
+                <option value="7">+7 (5th)</option>
+                <option value="12">+12</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-5 gap-1.5 pt-1">
+            <div class="knob-container" data-param="osc2Detune" data-min="0" data-max="50" data-val="8">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-slate-400">FINE</span>
+              <span class="knob-val text-[10px] font-mono-tech text-cyan-300">8ct</span>
+            </div>
+            <div class="knob-container knob-magenta" data-param="osc2Fm" data-min="0" data-max="600" data-val="75">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-fuchsia-400">FM AMT</span>
+              <span class="knob-val text-[10px] font-mono-tech text-fuchsia-300">75Hz</span>
+            </div>
+            <div class="knob-container knob-amber" data-param="noiseLevel" data-min="0" data-max="0.5" data-val="0.06">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-amber-400">X-NOISE</span>
+              <span class="knob-val text-[10px] font-mono-tech text-amber-300">12%</span>
+            </div>
+            <div class="knob-container knob-magenta" data-param="granularDensity" data-min="0" data-max="1" data-val="0.45">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-fuchsia-400">GRAINS</span>
+              <span class="knob-val text-[10px] font-mono-tech text-fuchsia-300">45%</span>
+            </div>
+            <div class="knob-container" data-param="osc2Level" data-min="0" data-max="1" data-val="0.60">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[10px] text-slate-400">LEVEL</span>
+              <span class="knob-val text-[10px] font-mono-tech text-cyan-300">60%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 module-panel rounded-xl p-3.5 flex flex-col justify-between gap-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 led-on"></span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-white">T-Bee Vint 303 & Spectral Filter</h2>
+          </div>
+          <select id="filterModel" class="bg-slate-900 text-emerald-300 font-mono-tech text-[11px] font-bold px-2 py-0.5 rounded border border-emerald-500/40">
+            <option value="tbee303">T-BEE VINT 303 (24dB Acid)</option>
+            <option value="lowpass">LADDER LP 24dB</option>
+            <option value="bandpass">COMPUTER COMB BP</option>
+            <option value="highpass">DIFFUSE CLOUD HP</option>
+            <option value="notch">VOWEL FORMANT NOTCH</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 bg-slate-950/75 p-3 rounded-xl border border-slate-800/90">
+          <div class="knob-container knob-acid" data-param="filterCutoff" data-min="40" data-max="16000" data-val="680">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-emerald-300">CUTOFF</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">680Hz</span>
+          </div>
+          <div class="knob-container knob-acid" data-param="filterRes" data-min="0.5" data-max="24" data-val="13.5">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-emerald-300">RESONANCE</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">13.5</span>
+          </div>
+          <div class="knob-container knob-amber" data-param="filterEnvAmt" data-min="0" data-max="8000" data-val="4200">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-amber-300">ENV MOD</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">+4200</span>
+          </div>
+          <div class="knob-container knob-magenta" data-param="filterDrive" data-min="0" data-max="1" data-val="0.55">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-fuchsia-300">303 DRIVE</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">55%</span>
+          </div>
+          <div class="knob-container knob-acid" data-param="acidAccent" data-min="0" data-max="1" data-val="0.85">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-emerald-300">ACCENT</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">85%</span>
+          </div>
+          <div class="knob-container" data-param="filterKeyTrack" data-min="0" data-max="1" data-val="0.55">
+            <div class="knob-dial"><div class="knob-indicator"></div></div>
+            <span class="text-[10px] font-bold text-cyan-300">KEYTRACK</span>
+            <span class="knob-val text-[10px] font-mono-tech text-slate-300">55%</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold text-fuchsia-400 uppercase">POST PEDAL:</span>
+            <select id="pedalModel" class="bg-slate-900 text-fuchsia-300 font-mono-tech text-xs px-2 py-0.5 rounded border border-slate-700">
+              <option value="yellow_acid">Yellow Acid Overdrive</option>
+              <option value="fuzzy03">Fuzzy03 Diode</option>
+              <option value="square_tube">Square Tube Warmth</option>
+              <option value="metallicon">Metallicon Brutal</option>
+              <option value="bypass">Bypass Clean</option>
+            </select>
+          </div>
+          <span class="text-[10px] font-mono-tech text-slate-400">4X OVERSAMPLED</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-3 module-panel rounded-xl p-3.5 flex flex-col justify-between gap-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-fuchsia-400 led-on"></span>
+            <h2 class="text-xs font-extrabold uppercase tracking-wider text-white">Envelopes & LFO</h2>
+          </div>
+          <span class="text-[10px] font-mono-tech text-fuchsia-300">ADSR + SYNC LFO</span>
+        </div>
+
+        <div class="bg-slate-950/75 p-2.5 rounded-xl border border-slate-800/90">
+          <div class="text-[10px] font-bold text-cyan-400 uppercase mb-1.5">AMP & FILTER ENVELOPE</div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <div class="knob-container" data-param="envAttack" data-min="0.002" data-max="1.5" data-val="0.006">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">ATK</span>
+              <span class="knob-val text-[9px] font-mono-tech text-cyan-300">6ms</span>
+            </div>
+            <div class="knob-container" data-param="envDecay" data-min="0.03" data-max="2.5" data-val="0.26">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">DEC</span>
+              <span class="knob-val text-[9px] font-mono-tech text-cyan-300">260ms</span>
+            </div>
+            <div class="knob-container" data-param="envSustain" data-min="0.0" data-max="1.0" data-val="0.18">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">SUS</span>
+              <span class="knob-val text-[9px] font-mono-tech text-cyan-300">18%</span>
+            </div>
+            <div class="knob-container" data-param="envRelease" data-min="0.02" data-max="3.0" data-val="0.18">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">REL</span>
+              <span class="knob-val text-[9px] font-mono-tech text-cyan-300">180ms</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/75 p-2.5 rounded-xl border border-slate-800/90">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-bold text-amber-400 uppercase">QUANTUM LFO 1</span>
+            <select id="lfoTarget" class="bg-slate-900 text-amber-300 font-mono-tech text-[10px] px-1.5 py-0.5 rounded border border-slate-700">
+              <option value="cutoff">→ Filter Cutoff</option>
+              <option value="pitch">→ Vibrato Pitch</option>
+              <option value="fm">→ FM Index</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="knob-container knob-amber" data-param="lfoRate" data-min="0.1" data-max="25" data-val="3.5">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">RATE</span>
+              <span class="knob-val text-[9px] font-mono-tech text-amber-300">3.5Hz</span>
+            </div>
+            <div class="knob-container knob-amber" data-param="lfoDepth" data-min="0" data-max="1" data-val="0.20">
+              <div class="knob-dial"><div class="knob-indicator"></div></div>
+              <span class="text-[9px] text-slate-400">DEPTH</span>
+              <span class="knob-val text-[9px] font-mono-tech text-amber-300">20%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: WORKSTATION TABS -->
+    <div class="module-panel rounded-xl p-3.5 flex flex-col gap-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-extrabold text-xs tracking-wide" data-tab="seqTab">
+            🎹 303 ACID & ARRANGEMENT
+          </button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide" data-tab="drumTab">
+            🥁 909/808 DRUMKIT ENGINE
+          </button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide" data-tab="modTab">
+            🔀 MODULATION MATRIX
+          </button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide" data-tab="fxTab">
+            🌌 Q4NTUM DELAY & RUTAVERB
+          </button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide" data-tab="arpTab">
+            ⚡ QUANTIZER & CHORD STACK
+          </button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide" data-tab="soundsIdTab">
+            🔊 SOUNDS ID ENGINE
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5">
+          <div class="flex items-center bg-slate-950 rounded-lg border border-slate-700 p-0.5" title="4-Pattern Song Arrangement Banks">
+            <button class="pat-slot-btn px-2 py-1 rounded bg-cyan-500 text-slate-950 font-mono-tech font-extrabold text-xs" data-slot="0">A</button>
+            <button class="pat-slot-btn px-2 py-1 rounded text-slate-400 hover:text-white font-mono-tech font-bold text-xs" data-slot="1">B</button>
+            <button class="pat-slot-btn px-2 py-1 rounded text-slate-400 hover:text-white font-mono-tech font-bold text-xs" data-slot="2">C</button>
+            <button class="pat-slot-btn px-2 py-1 rounded text-slate-400 hover:text-white font-mono-tech font-bold text-xs" data-slot="3">D</button>
+          </div>
+          <button id="chainModeBtn" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono-tech font-bold border border-slate-700" title="Auto-Chain Patterns A-B-C-D">
+            CHAIN: OFF
+          </button>
+          <button id="reversePatternBtn" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 text-[11px] font-mono-tech font-bold border border-slate-700" title="Reverse Sequence">
+            ⇄ REV
+          </button>
+          <select id="seqLengthSelect" class="bg-slate-900 text-cyan-300 font-mono-tech text-[11px] font-bold px-2 py-1 rounded-lg border border-slate-700" title="Sequencer Step Length (Up to 128 Steps)">
+            <option value="16">16 STEPS (1 BAR)</option>
+            <option value="32">32 STEPS (2 BARS)</option>
+            <option value="64">64 STEPS (4 BARS)</option>
+            <option value="128" selected>128 STEPS (8 BARS)</option>
+          </select>
+          <select id="scaleSelect" class="bg-slate-900 text-emerald-300 font-mono-tech text-xs px-2 py-1 rounded-lg border border-slate-700">
+            <option value="phrygian">Scale: Phrygian Acid</option>
+            <option value="minor">Scale: Natural Minor</option>
+            <option value="dorian">Scale: Dorian Groove</option>
+            <option value="hirajoshi">Scale: Hirajoshi Koto</option>
+            <option value="chromatic">Scale: Chromatic 303</option>
+          </select>
+          <button id="genAcidPatternBtn" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold">
+            🎲 GEN 303 RIFF
+          </button>
+          <button id="exportMidiBtn" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold" title="Export Pattern to Standard MIDI File (.mid)">
+            💾 .MID
+          </button>
+          <button id="clearPatternBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">
+            CLEAR
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: 128-STEP 303 ACID SEQUENCER -->
+      <div id="seqTab" class="tab-content">
+        <div id="sequencerScrollWrap" class="overflow-x-auto pb-1">
+          <div id="sequencerGrid" class="flex gap-1.5 w-max"></div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+          <div class="flex items-center gap-4">
+            <span><strong class="text-cyan-400">NOTE:</strong> Click pitch pill to cycle scale notes</span>
+            <span><strong class="text-emerald-400">ACC:</strong> 303 Cutoff, Res & Punch Boost</span>
+            <span><strong class="text-amber-400">SLD:</strong> True Legato Portamento Glide</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>SHUFFLE:</span>
+            <input id="swingSlider" type="range" min="0" max="0.45" step="0.01" value="0.12" class="synth-slider w-24" />
+            <span id="swingVal" class="font-mono-tech text-cyan-300">12%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: 909 DRUMKIT -->
+      <div id="drumTab" class="tab-content hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-3">
+            <button id="drumEnableBtn" class="px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-extrabold text-xs">
+              DRUM ENGINE: ON
+            </button>
+            <span class="text-xs text-slate-400">Synthesized 909 Punch Kick, Analog Snare & Metallic Closed Hat</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold text-slate-400">DRUM VOL:</span>
+            <input id="drumVolSlider" type="range" min="0" max="1" step="0.01" value="0.80" class="synth-slider w-24" />
+            <button id="genDrumGrooveBtn" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold">
+              🎲 TECHNO GROOVE
+            </button>
+          </div>
+        </div>
+        <div id="drumGridContainer" class="flex flex-col gap-1.5 overflow-x-auto pb-1"></div>
+      </div>
+
+      <!-- TAB 3: MODULATION MATRIX -->
+      <div id="modTab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3" id="modMatrixContainer"></div>
+      </div>
+
+      <!-- TAB 4: Q4NTUM FX -->
+      <div id="fxTab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-cyan-400">Q4NTUM MULTI-TAP DELAY</span>
+              <span class="text-[10px] font-mono-tech text-slate-400">STEREO PING-PONG</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div class="knob-container" data-param="delayTime" data-min="0.06" data-max="0.85" data-val="0.33">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">TIME</span>
+                <span class="knob-val text-[10px] font-mono-tech text-cyan-300">330ms</span>
+              </div>
+              <div class="knob-container" data-param="delayFeedback" data-min="0" data-max="0.85" data-val="0.45">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">FEEDBACK</span>
+                <span class="knob-val text-[10px] font-mono-tech text-cyan-300">45%</span>
+              </div>
+              <div class="knob-container" data-param="delayMix" data-min="0" data-max="0.8" data-val="0.28">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">MIX</span>
+                <span class="knob-val text-[10px] font-mono-tech text-cyan-300">28%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-fuchsia-400">RUTAVERB QUANTUM HALL</span>
+              <span class="text-[10px] font-mono-tech text-slate-400">ALGORITHMIC IR</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div class="knob-container knob-magenta" data-param="reverbSize" data-min="0.5" data-max="4.5" data-val="2.4">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">DECAY</span>
+                <span class="knob-val text-[10px] font-mono-tech text-fuchsia-300">2.4s</span>
+              </div>
+              <div class="knob-container knob-magenta" data-param="reverbDamp" data-min="800" data-max="12000" data-val="5500">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">DAMPING</span>
+                <span class="knob-val text-[10px] font-mono-tech text-fuchsia-300">5.5k</span>
+              </div>
+              <div class="knob-container knob-magenta" data-param="reverbMix" data-min="0" data-max="0.85" data-val="0.26">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">WET MIX</span>
+                <span class="knob-val text-[10px] font-mono-tech text-fuchsia-300">26%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-amber-400">PHASE PUNCHER & CHORUS</span>
+              <span class="text-[10px] font-mono-tech text-slate-400">64-STAGE</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div class="knob-container knob-amber" data-param="chorusRate" data-min="0.1" data-max="6.0" data-val="1.2">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">RATE</span>
+                <span class="knob-val text-[10px] font-mono-tech text-amber-300">1.2Hz</span>
+              </div>
+              <div class="knob-container knob-amber" data-param="chorusDepth" data-min="0" data-max="1" data-val="0.45">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">SPREAD</span>
+                <span class="knob-val text-[10px] font-mono-tech text-amber-300">45%</span>
+              </div>
+              <div class="knob-container knob-amber" data-param="limiterDrive" data-min="0" data-max="12" data-val="3.0">
+                <div class="knob-dial"><div class="knob-indicator"></div></div>
+                <span class="text-[10px] text-slate-400">MAXIMIZER</span>
+                <span class="knob-val text-[10px] font-mono-tech text-amber-300">+3dB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: QUANTIZER & CHORD HARMONIZER -->
+      <div id="arpTab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-extrabold text-emerald-400 uppercase">Chord Harmonizer Voicing</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Stacks harmonic intervals when in Poly 16 mode.</p>
+            </div>
+            <select id="chordMode" class="bg-slate-900 text-emerald-300 font-mono-tech text-xs px-3 py-2 rounded-lg border border-emerald-500/40">
+              <option value="off">Single Voice</option>
+              <option value="octave">Sub Octave Stack (-12)</option>
+              <option value="fifth">Power Fifth (0, +7)</option>
+              <option value="minor7">Deep House Minor 7th (0, +3, +7, +10)</option>
+              <option value="supersaw">Trance Anthem Stack (-12, 0, +7, +12)</option>
+            </select>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-extrabold text-cyan-400 uppercase">Real-Time Performance Arpeggiator</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Hold notes on the keyboard or computer keys (A–P) to arpeggiate.</p>
+            </div>
+            <select id="arpMode" class="bg-slate-900 text-cyan-300 font-mono-tech text-xs px-3 py-2 rounded-lg border border-cyan-500/40">
+              <option value="off">Arpeggiator Off</option>
+              <option value="up">Upward Escalation</option>
+              <option value="down">Downward Cascade</option>
+              <option value="updown">Up / Down Pendulum</option>
+              <option value="random">Quantum Dice Random</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: SOUNDS ID ACOUSTIC & PATCH FINGERPRINT ENGINE -->
+      <div id="soundsIdTab" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+          <div class="lg:col-span-5 bg-slate-950/85 p-3 rounded-xl border border-indigo-500/30 flex flex-col justify-between gap-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-indigo-300 uppercase">SOUNDS ID FINGERPRINT SCANNER</span>
+              <button id="scanSoundIdBtn" class="px-2.5 py-1 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-extrabold text-[11px]">
+                🔍 IDENTIFY SOUND
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] font-mono-tech">
+              <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                <div class="text-[9px] text-slate-400">DETECTED NOTE & HZ</div>
+                <div id="sidPitchReadout" class="text-cyan-300 font-bold mt-0.5">-- Hz (--)</div>
+              </div>
+              <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                <div class="text-[9px] text-slate-400">SPECTRAL CENTROID</div>
+                <div id="sidCentroidReadout" class="text-amber-300 font-bold mt-0.5">-- Hz</div>
+              </div>
+              <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                <div class="text-[9px] text-slate-400">TIMBRE / CHARACTER</div>
+                <div id="sidTimbreReadout" class="text-emerald-300 font-bold mt-0.5">AWAITING SIGNAL</div>
+              </div>
+              <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                <div class="text-[9px] text-slate-400">BEST PATCH MATCH</div>
+                <div id="sidBestMatchReadout" class="text-fuchsia-300 font-bold truncate mt-0.5">--</div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[10px] font-mono-tech text-slate-400">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input id="sidAutoTrackToggle" type="checkbox" checked class="accent-indigo-400" />
+                <span>LIVE AUTO-IDENTIFY</span>
+              </label>
+              <button id="sidApplyMatchBtn" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold">
+                LOAD MATCHED PATCH
+              </button>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 bg-slate-950/85 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-cyan-300 uppercase">IDENTIFIED SOUND LOG & PRESET SIMILARITY</span>
+              <span id="sidHistoryCount" class="text-[10px] font-mono-tech text-slate-400">0 SCANS</span>
+            </div>
+            <div id="soundsIdLogList" class="max-h-36 overflow-y-auto flex flex-col gap-1.5 text-[11px] font-mono-tech">
+              <div class="text-slate-500 text-xs py-4 text-center">Play a note, toggle Mic ID, or start the sequencer to fingerprint active audio.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 5: PITCH BEND, MOD WHEEL & POLYPHONIC PERFORMANCE KEYBOARD -->
+    <div class="module-panel rounded-xl p-3 flex flex-col gap-2">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-300">Performance Keybed</span>
+          <span class="text-[11px] font-mono-tech text-slate-400 hidden sm:inline">• Keys: A W S E D F T G Y H U J K O L P • Space = Play/Stop</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="octDownBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyan-300">OCT -</button>
+          <span id="kbdOctaveLabel" class="font-mono-tech text-xs font-bold text-amber-400 px-1.5">C3</span>
+          <button id="octUpBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyan-300">OCT +</button>
+        </div>
+      </div>
+
+      <div class="flex items-stretch gap-3">
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800">
+          <div class="flex flex-col items-center justify-between h-28">
+            <span class="text-[9px] font-bold text-cyan-400">BEND</span>
+            <input id="pitchWheel" type="range" min="-2" max="2" step="0.05" value="0" class="synth-slider w-20 -rotate-90 my-auto" />
+            <span class="text-[9px] font-mono-tech text-slate-500">±2st</span>
+          </div>
+          <div class="flex flex-col items-center justify-between h-28">
+            <span class="text-[9px] font-bold text-amber-400">MOD</span>
+            <input id="modWheel" type="range" min="0" max="1" step="0.01" value="0.2" class="synth-slider w-20 -rotate-90 my-auto" />
+            <span class="text-[9px] font-mono-tech text-slate-500">CC1</span>
+          </div>
+        </div>
+
+        <div id="pianoContainer" class="relative flex-1 h-32 sm:h-36 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden select-none"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    class VortexTitanEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.drumBusGain = null;
+        this.synthBusGain = null;
+        this.compressor = null;
+        this.analyser = null;
+        this.delayNodeL = null;
+        this.delayNodeR = null;
+        this.delayFeedback = null;
+        this.delayWet = null;
+        this.reverbNode = null;
+        this.reverbWet = null;
+        this.resonatorDelay = null;
+        this.resonatorFeedback = null;
+        this.resonatorWet = null;
+        this.distortionNode = null;
+        this.tbSquareWave = null;
+        this.spectralWave = null;
+        this.hybridWave = null;
+        this.granularTimer = null;
+        this.micStream = null;
+        this.micSource = null;
+
+        this.activeVoices = new Map();
+        this.monoVoice = null;
+        this.lastFreq = 130.81;
+        this.baseOctave = 3;
+        this.pitchBend = 0;
+        this.modWheelVal = 0.2;
+        this.monoLegato = true;
+        this.granularEnabled = false;
+        this.micActive = false;
+
+        this.modMatrix = [
+          { source: 'lfo1', dest: 'cutoff', amount: 0.25 },
+          { source: 'accent', dest: 'cutoff', amount: 0.65 },
+          { source: 'modwheel', dest: 'fm', amount: 0.45 },
+          { source: 'velocity', dest: 'res', amount: 0.30 }
+        ];
+
+        this.params = {
+          osc1Enabled: true,
+          osc1Wave: 'tb_square',
+          osc1Oct: -1,
+          osc1Detune: 12,
+          osc1Unison: 2,
+          tbSquareMorph: 0.72,
+          osc1Level: 0.88,
+
+          osc2Enabled: true,
+          osc2Wave: 'sawtooth',
+          osc2Semi: 0,
+          osc2Detune: 8,
+          osc2Fm: 75,
+          noiseLevel: 0.06,
+          granularDensity: 0.45,
+          osc2Level: 0.60,
+
+          filterModel: 'tbee303',
+          filterCutoff: 680,
+          filterRes: 13.5,
+          filterEnvAmt: 4200,
+          filterDrive: 0.55,
+          acidAccent: 0.85,
+          filterKeyTrack: 0.55,
+          pedalModel: 'yellow_acid',
+
+          envAttack: 0.006,
+          envDecay: 0.26,
+          envSustain: 0.18,
+          envRelease: 0.18,
+
+          lfoTarget: 'cutoff',
+          lfoRate: 3.5,
+          lfoDepth: 0.20,
+
+          delayTime: 0.33,
+          delayFeedback: 0.45,
+          delayMix: 0.28,
+
+          reverbSize: 2.4,
+          reverbDamp: 5500,
+          reverbMix: 0.26,
+
+          chorusRate: 1.2,
+          chorusDepth: 0.45,
+          limiterDrive: 3.0,
+
+          hybridMorph: 0.45,
+          resonatorMix: 0.25,
+          sidechainDepth: 0.40,
+
+          macroAcid: 0.55,
+          macroSpace: 0.40,
+          macroGrit: 0.30,
+
+          masterVol: 0.78,
+          drumVol: 0.80
+        };
+      }
+
+      initAudio() {
+        if (this.ctx) {
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+          return;
+        }
+
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AudioCtx();
+
+        const n = 64;
+        const real = new Float32Array(n);
+        const imag = new Float32Array(n);
+        for (let i = 1; i < n; i++) {
+          imag[i] = (i % 2 === 1 ? 1.0 : 0.38) * (1 / Math.pow(i, 0.88));
+          real[i] = (i % 3 === 0 ? 0.18 : -0.08) * (1 / i);
+        }
+        this.tbSquareWave = this.ctx.createPeriodicWave(real, imag);
+
+        const sReal = new Float32Array(32);
+        const sImag = new Float32Array(32);
+        [1, 2, 3, 5, 8, 13, 21].forEach((h, idx) => {
+          sImag[h] = 1 / (idx + 1);
+        });
+        this.spectralWave = this.ctx.createPeriodicWave(sReal, sImag);
+
+        this.rebuildHybridWave();
+
+        this.synthBusGain = this.ctx.createGain();
+        this.synthBusGain.gain.value = 1.0;
+
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = this.params.masterVol;
+
+        this.drumBusGain = this.ctx.createGain();
+        this.drumBusGain.gain.value = this.params.drumVol;
+
+        this.compressor = this.ctx.createDynamicsCompressor();
+        this.compressor.threshold.value = -10;
+        this.compressor.knee.value = 12;
+        this.compressor.ratio.value = 8;
+        this.compressor.attack.value = 0.003;
+        this.compressor.release.value = 0.15;
+
+        this.analyser = this.ctx.createAnalyser();
+        this.analyser.fftSize = 2048;
+        this.analyser.smoothingTimeConstant = 0.82;
+
+        this.distortionNode = this.ctx.createWaveShaper();
+        this.distortionNode.oversample = '4x';
+        this.updateDistortionCurve();
+
+        this.delayNodeL = this.ctx.createDelay(2.0);
+        this.delayNodeR = this.ctx.createDelay(2.0);
+        this.delayNodeL.delayTime.value = this.params.delayTime;
+        this.delayNodeR.delayTime.value = this.params.delayTime * 1.5;
+
+        this.delayFeedback = this.ctx.createGain();
+        this.delayFeedback.gain.value = this.params.delayFeedback;
+
+        this.delayWet = this.ctx.createGain();
+        this.delayWet.gain.value = this.params.delayMix;
+
+        const merger = this.ctx.createChannelMerger(2);
+        this.delayNodeL.connect(this.delayNodeR);
+        this.delayNodeR.connect(this.delayFeedback);
+        this.delayFeedback.connect(this.delayNodeL);
+
+        this.delayNodeL.connect(merger, 0, 0);
+        this.delayNodeR.connect(merger, 0, 1);
+        merger.connect(this.delayWet);
+
+        this.reverbNode = this.ctx.createConvolver();
+        this.reverbWet = this.ctx.createGain();
+        this.reverbWet.gain.value = this.params.reverbMix;
+        this.generateImpulseResponse();
+        this.reverbNode.connect(this.reverbWet);
+
+        this.resonatorDelay = this.ctx.createDelay(0.25);
+        this.resonatorDelay.delayTime.value = 1 / 130.81;
+        this.resonatorFeedback = this.ctx.createGain();
+        this.resonatorFeedback.gain.value = 0.72;
+        const resFilter = this.ctx.createBiquadFilter();
+        resFilter.type = 'lowpass';
+        resFilter.frequency.value = 3600;
+        this.resonatorWet = this.ctx.createGain();
+        this.resonatorWet.gain.value = this.params.resonatorMix * 0.45;
+
+        this.resonatorDelay.connect(resFilter);
+        resFilter.connect(this.resonatorFeedback);
+        this.resonatorFeedback.connect(this.resonatorDelay);
+        resFilter.connect(this.resonatorWet);
+
+        this.distortionNode.connect(this.synthBusGain);
+        this.distortionNode.connect(this.delayNodeL);
+        this.distortionNode.connect(this.reverbNode);
+        this.distortionNode.connect(this.resonatorDelay);
+
+        this.delayWet.connect(this.synthBusGain);
+        this.reverbWet.connect(this.synthBusGain);
+        this.resonatorWet.connect(this.synthBusGain);
+        this.synthBusGain.connect(this.masterGain);
+        this.drumBusGain.connect(this.masterGain);
+
+        this.masterGain.connect(this.compressor);
+        this.compressor.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+
+        this.startGranularEngine();
+
+        const overlay = document.getElementById('audioInitOverlay');
+        if (overlay) overlay.classList.add('hidden');
+      }
+
+      async toggleMicInput() {
+        this.initAudio();
+        const btn = document.getElementById('micInputBtn');
+        if (!this.micActive) {
+          try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+              showToast('⚠️ MIC INPUT NOT SUPPORTED IN THIS BROWSER');
+              return;
+            }
+            this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.micSource = this.ctx.createMediaStreamSource(this.micStream);
+            const micGain = this.ctx.createGain();
+            micGain.gain.value = 0.35;
+            this.micSource.connect(micGain);
+            micGain.connect(this.analyser);
+            this.micActive = true;
+            if (btn) {
+              btn.textContent = 'MIC ID: LIVE';
+              btn.className = 'px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-emerald-500 text-slate-950 rounded-full cursor-pointer';
+            }
+            showToast('🎙️ LIVE ACOUSTIC MIC ROUTED TO SOUNDS ID & ANALYZER');
+          } catch (e) {
+            showToast('⚠️ MIC PERMISSION DENIED OR UNAVAILABLE');
+          }
+        } else {
+          if (this.micSource) {
+            try { this.micSource.disconnect(); } catch (e) {}
+          }
+          if (this.micStream) {
+            this.micStream.getTracks().forEach(t => t.stop());
+          }
+          this.micActive = false;
+          if (btn) {
+            btn.textContent = 'MIC ID: OFF';
+            btn.className = 'px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 rounded-full cursor-pointer';
+          }
+          showToast('🎙️ MIC ID STOPPED');
+        }
+      }
+
+      rebuildHybridWave() {
+        if (!this.ctx) return;
+        const size = 64;
+        const real = new Float32Array(size);
+        const imag = new Float32Array(size);
+        const m = this.params.hybridMorph;
+        for (let h = 1; h < size; h++) {
+          const sawPart = (1 - m) * (1 / h) * (h % 2 === 0 ? -0.6 : 1.0);
+          const formPart = m * Math.exp(-Math.pow((h - (3 + m * 12)) / 3.5, 2));
+          imag[h] = sawPart + formPart;
+          real[h] = (h % 4 === 0 ? 0.15 * m : 0) / Math.sqrt(h);
+        }
+        this.hybridWave = this.ctx.createPeriodicWave(real, imag);
+      }
+
+      startGranularEngine() {
+        if (this.granularTimer) clearInterval(this.granularTimer);
+        this.granularTimer = setInterval(() => {
+          if (!this.ctx || !this.granularEnabled || this.activeVoices.size === 0) return;
+          const now = this.ctx.currentTime;
+          const grainOsc = this.ctx.createOscillator();
+          const grainGain = this.ctx.createGain();
+          const octShift = [0.5, 1, 1.5, 2][Math.floor(Math.random() * 4)];
+          grainOsc.type = 'sine';
+          grainOsc.frequency.setValueAtTime(Math.max(55, this.lastFreq * octShift), now);
+
+          const dur = 0.04 + (1 - this.params.granularDensity) * 0.08;
+          const peak = 0.035 * this.params.granularDensity;
+          grainGain.gain.setValueAtTime(0.0001, now);
+          grainGain.gain.linearRampToValueAtTime(peak, now + dur * 0.35);
+          grainGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+          grainOsc.connect(grainGain);
+          grainGain.connect(this.reverbNode);
+          grainOsc.start(now);
+          grainOsc.stop(now + dur + 0.01);
+        }, 75);
+      }
+
+      triggerDrum(type, accent = false) {
+        if (!this.ctx || !this.drumBusGain) return;
+        const now = this.ctx.currentTime;
+
+        if (type === 'kick') {
+          if (this.synthBusGain && this.params.sidechainDepth > 0.01) {
+            const duckTarget = Math.max(0.12, 1 - this.params.sidechainDepth * 0.82);
+            this.synthBusGain.gain.cancelScheduledValues(now);
+            this.synthBusGain.gain.setValueAtTime(this.synthBusGain.gain.value, now);
+            this.synthBusGain.gain.linearRampToValueAtTime(duckTarget, now + 0.008);
+            this.synthBusGain.gain.exponentialRampToValueAtTime(1.0, now + 0.24);
+          }
+
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const startFreq = accent ? 165 : 140;
+          osc.frequency.setValueAtTime(startFreq, now);
+          osc.frequency.exponentialRampToValueAtTime(42, now + 0.11);
+          osc.frequency.exponentialRampToValueAtTime(28, now + 0.28);
+
+          const amp = accent ? 0.95 : 0.75;
+          gain.gain.setValueAtTime(amp, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.30);
+
+          osc.connect(gain);
+          gain.connect(this.drumBusGain);
+          osc.start(now);
+          osc.stop(now + 0.31);
+        } else if (type === 'snare') {
+          const bufferSize = this.ctx.sampleRate * 0.18;
+          const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.value = 1850;
+          filter.Q.value = 1.2;
+
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.42, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.drumBusGain);
+          noise.start(now);
+        } else if (type === 'hat') {
+          const bufferSize = this.ctx.sampleRate * 0.06;
+          const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'highpass';
+          filter.frequency.value = 7200;
+
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(accent ? 0.24 : 0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.drumBusGain);
+          noise.start(now);
+        }
+      }
+
+      getModulationOffset(dest, velocity = 0.8, accent = false) {
+        let sum = 0;
+        this.modMatrix.forEach(slot => {
+          if (slot.dest !== dest) return;
+          let srcVal = 0;
+          if (slot.source === 'accent') srcVal = accent ? 1 : 0;
+          else if (slot.source === 'modwheel') srcVal = this.modWheelVal;
+          else if (slot.source === 'velocity') srcVal = velocity;
+          else if (slot.source === 'env') srcVal = Math.min(1, this.params.filterEnvAmt / 6000);
+          else if (slot.source === 'lfo1') srcVal = this.params.lfoDepth * 0.5;
+          sum += srcVal * slot.amount;
+        });
+        return sum;
+      }
+
+      applyWaveform(osc, waveType) {
+        if (waveType === 'tb_square' && this.tbSquareWave) {
+          osc.setPeriodicWave(this.tbSquareWave);
+        } else if (waveType === 'spectral_harm' && this.spectralWave) {
+          osc.setPeriodicWave(this.spectralWave);
+        } else if (waveType === 'hybrid_morph' && this.hybridWave) {
+          osc.setPeriodicWave(this.hybridWave);
+        } else if (['sine', 'square', 'sawtooth', 'triangle'].includes(waveType)) {
+          osc.type = waveType;
+        } else {
+          osc.type = 'sawtooth';
+        }
+      }
+
+      generateImpulseResponse() {
+        if (!this.ctx || !this.reverbNode) return;
+        const rate = this.ctx.sampleRate;
+        const length = Math.max(0.3, this.params.reverbSize) * rate;
+        const impulse = this.ctx.createBuffer(2, length, rate);
+        const decay = 2.2;
+
+        for (let ch = 0; ch < 2; ch++) {
+          const channelData = impulse.getChannelData(ch);
+          for (let i = 0; i < length; i++) {
+            const env = Math.pow(1 - i / length, decay);
+            channelData[i] = (Math.random() * 2 - 1) * env;
+          }
+        }
+        this.reverbNode.buffer = impulse;
+      }
+
+      updateDistortionCurve() {
+        if (!this.distortionNode) return;
+        const model = this.params.pedalModel;
+        const drive = this.params.filterDrive + this.params.macroGrit * 0.6;
+        const n = 44100;
+        const curve = new Float32Array(n);
+        const k = model === 'bypass' ? 0 : drive * 45;
+
+        for (let i = 0; i < n; i++) {
+          const x = (i * 2) / n - 1;
+          if (model === 'bypass' || k === 0) {
+            curve[i] = x;
+          } else if (model === 'yellow_acid') {
+            curve[i] = Math.tanh(x * (1 + k * 0.35));
+          } else if (model === 'fuzzy03') {
+            curve[i] = Math.sign(x) * (1 - Math.exp(-Math.abs(x) * (1 + k * 0.5)));
+          } else if (model === 'square_tube') {
+            curve[i] = Math.max(-0.85, Math.min(0.85, x * (1 + k * 0.4)));
+          } else {
+            curve[i] = Math.tanh(Math.sin(x * Math.PI * 0.5) * (1 + k * 0.7));
+          }
+        }
+        this.distortionNode.curve = curve;
+      }
+
+      midiToFreq(midi) {
+        return 440 * Math.pow(2, (midi - 69 + this.pitchBend) / 12);
+      }
+
+      getChordOffsets() {
+        const chordSelect = document.getElementById('chordMode');
+        const mode = chordSelect ? chordSelect.value : 'off';
+        switch (mode) {
+          case 'octave': return [-12, 0];
+          case 'fifth': return [0, 7];
+          case 'minor7': return [0, 3, 7, 10];
+          case 'supersaw': return [-12, 0, 7, 12];
+          default: return [0];
+        }
+      }
+
+      noteOn(midi, velocity = 0.85, accent = false, slide = false) {
+        this.initAudio();
+        const now = this.ctx.currentTime;
+
+        if (this.monoLegato && this.monoVoice && (slide || this.activeVoices.size > 0)) {
+          const targetFreq = this.midiToFreq(midi);
+          const glideTime = slide ? 0.085 : 0.018;
+          this.monoVoice.group.forEach(({ osc1List, osc2Ref, filter, vca }) => {
+            osc1List.forEach(osc => {
+              osc.frequency.cancelScheduledValues(now);
+              osc.frequency.setValueAtTime(osc.frequency.value, now);
+              osc.frequency.exponentialRampToValueAtTime(targetFreq * Math.pow(2, this.params.osc1Oct), now + glideTime);
+            });
+            if (osc2Ref) {
+              osc2Ref.frequency.cancelScheduledValues(now);
+              osc2Ref.frequency.setValueAtTime(osc2Ref.frequency.value, now);
+              osc2Ref.frequency.exponentialRampToValueAtTime(targetFreq * Math.pow(2, this.params.osc2Semi / 12), now + glideTime);
+            }
+            if (accent) {
+              const curCut = filter.frequency.value;
+              filter.frequency.cancelScheduledValues(now);
+              filter.frequency.setValueAtTime(curCut, now);
+              filter.frequency.linearRampToValueAtTime(Math.min(18500, curCut + 2400 * this.params.acidAccent), now + 0.015);
+              filter.frequency.exponentialRampToValueAtTime(Math.max(60, curCut), now + 0.22);
+              vca.gain.setTargetAtTime(0.44 * velocity, now, 0.01);
+            }
+          });
+          this.monoVoice.midi = midi;
+          this.lastFreq = targetFreq;
+          this.activeVoices.clear();
+          this.activeVoices.set(midi, this.monoVoice.group);
+          return;
+        }
+
+        if (this.monoLegato && this.monoVoice) {
+          this.panic();
+        }
+
+        if (this.activeVoices.has(midi)) {
+          this.noteOff(midi, true);
+        }
+
+        const voiceGroup = [];
+        const offsets = this.monoLegato ? [0] : this.getChordOffsets();
+
+        offsets.forEach((semiOffset) => {
+          const freq = this.midiToFreq(midi + semiOffset);
+          const glideTime = slide ? 0.085 : 0.004;
+
+          const filter = this.ctx.createBiquadFilter();
+          const model = this.params.filterModel;
+          if (model === 'tbee303' || model === 'lowpass') filter.type = 'lowpass';
+          else if (model === 'bandpass') filter.type = 'bandpass';
+          else if (model === 'highpass') filter.type = 'highpass';
+          else filter.type = 'notch';
+
+          const modCutoff = this.getModulationOffset('cutoff', velocity, accent) * 3200;
+          const modRes = this.getModulationOffset('res', velocity, accent) * 8;
+          const macroBoost = this.params.macroAcid * 2200;
+          const keyTrackBoost = (freq - 130) * this.params.filterKeyTrack * 1.4;
+          const accentBoost = accent ? (2200 * this.params.acidAccent) : 0;
+          const baseCutoff = Math.min(18000, Math.max(40, this.params.filterCutoff + macroBoost + keyTrackBoost + modCutoff));
+          const peakCutoff = Math.min(19000, baseCutoff + this.params.filterEnvAmt + accentBoost);
+
+          const effDecay = accent ? Math.max(0.08, this.params.envDecay * 0.72) : this.params.envDecay;
+          const resBoost = (accent ? this.params.filterRes * 1.28 : this.params.filterRes) + modRes;
+          filter.Q.setValueAtTime(Math.max(0.5, Math.min(26, resBoost)), now);
+
+          filter.frequency.cancelScheduledValues(now);
+          filter.frequency.setValueAtTime(baseCutoff, now);
+          filter.frequency.linearRampToValueAtTime(peakCutoff, now + this.params.envAttack);
+          filter.frequency.exponentialRampToValueAtTime(
+            Math.max(45, baseCutoff + (peakCutoff - baseCutoff) * this.params.envSustain),
+            now + this.params.envAttack + effDecay
+          );
+
+          const vca = this.ctx.createGain();
+          const peakGain = (accent ? 0.44 : 0.30) * velocity / Math.sqrt(offsets.length);
+          vca.gain.setValueAtTime(0.0001, now);
+          vca.gain.linearRampToValueAtTime(peakGain, now + this.params.envAttack);
+          vca.gain.exponentialRampToValueAtTime(
+            Math.max(0.0001, peakGain * Math.max(0.05, this.params.envSustain)),
+            now + this.params.envAttack + effDecay
+          );
+
+          filter.connect(vca);
+          vca.connect(this.distortionNode);
+
+          const oscNodes = [];
+          const osc1List = [];
+
+          if (this.params.osc1Enabled && this.params.osc1Level > 0.01) {
+            const voices = Math.round(this.params.osc1Unison);
+            const osc1Freq = freq * Math.pow(2, this.params.osc1Oct);
+            const startFreq1 = slide ? this.lastFreq * Math.pow(2, this.params.osc1Oct) : osc1Freq;
+
+            const osc1Gain = this.ctx.createGain();
+            osc1Gain.gain.value = (this.params.osc1Level * 0.6) / Math.sqrt(voices);
+            osc1Gain.connect(filter);
+
+            const modDetune = this.getModulationOffset('detune', velocity, accent) * 25;
+
+            for (let v = 0; v < voices; v++) {
+              const osc = this.ctx.createOscillator();
+              this.applyWaveform(osc, this.params.osc1Wave);
+
+              const spread = voices === 1 ? 0 : ((v / (voices - 1)) - 0.5) * 2;
+              const detuneCents = spread * (this.params.osc1Detune + modDetune);
+
+              osc.detune.setValueAtTime(detuneCents, now);
+              osc.frequency.setValueAtTime(startFreq1, now);
+              osc.frequency.exponentialRampToValueAtTime(osc1Freq, now + glideTime);
+
+              osc.connect(osc1Gain);
+              osc.start(now);
+              oscNodes.push(osc);
+              osc1List.push(osc);
+            }
+          }
+
+          let osc2Ref = null;
+          if (this.params.osc2Enabled && this.params.osc2Level > 0.01) {
+            const osc2 = this.ctx.createOscillator();
+            this.applyWaveform(osc2, this.params.osc2Wave);
+            const osc2Freq = freq * Math.pow(2, this.params.osc2Semi / 12);
+            const startFreq2 = slide ? this.lastFreq * Math.pow(2, this.params.osc2Semi / 12) : osc2Freq;
+
+            osc2.detune.setValueAtTime(this.params.osc2Detune, now);
+            osc2.frequency.setValueAtTime(startFreq2, now);
+            osc2.frequency.exponentialRampToValueAtTime(osc2Freq, now + glideTime);
+
+            const osc2Gain = this.ctx.createGain();
+            osc2Gain.gain.value = this.params.osc2Level * 0.55;
+            osc2.connect(osc2Gain);
+            osc2Gain.connect(filter);
+
+            const modFm = this.getModulationOffset('fm', velocity, accent) * 350;
+            const fmAmt = Math.max(0, this.params.osc2Fm + modFm);
+            if (fmAmt > 1 && osc1List.length > 0) {
+              const fmGain = this.ctx.createGain();
+              fmGain.gain.value = fmAmt;
+              osc2.connect(fmGain);
+              osc1List.forEach(targetOsc => fmGain.connect(targetOsc.frequency));
+            }
+
+            osc2.start(now);
+            oscNodes.push(osc2);
+            osc2Ref = osc2;
+          }
+
+          if (this.params.noiseLevel > 0.005) {
+            const bufferSize = this.ctx.sampleRate * 1.5;
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+
+            const whiteNoise = this.ctx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+
+            const noiseGain = this.ctx.createGain();
+            noiseGain.gain.value = this.params.noiseLevel * 0.35;
+
+            whiteNoise.connect(noiseGain);
+            noiseGain.connect(filter);
+            whiteNoise.start(now);
+            oscNodes.push(whiteNoise);
+          }
+
+          const matrixLfoSlot = this.modMatrix.find(s => s.source === 'lfo1' && Math.abs(s.amount) > 0.01);
+          if (this.params.lfoDepth > 0.01 || matrixLfoSlot) {
+            const lfo = this.ctx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.value = this.params.lfoRate;
+
+            if (this.params.lfoDepth > 0.01) {
+              const lfoGain = this.ctx.createGain();
+              if (this.params.lfoTarget === 'cutoff') {
+                lfoGain.gain.value = this.params.lfoDepth * 2400;
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+              } else if (this.params.lfoTarget === 'pitch') {
+                lfoGain.gain.value = this.params.lfoDepth * 45;
+                lfo.connect(lfoGain);
+                oscNodes.forEach(o => { if (o.detune) lfoGain.connect(o.detune); });
+              } else if (this.params.lfoTarget === 'fm' && osc2Ref) {
+                lfoGain.gain.value = this.params.lfoDepth * 40;
+                lfo.connect(lfoGain);
+                lfoGain.connect(osc2Ref.frequency);
+              }
+            }
+
+            if (matrixLfoSlot) {
+              const mGain = this.ctx.createGain();
+              if (matrixLfoSlot.dest === 'cutoff') {
+                mGain.gain.value = matrixLfoSlot.amount * 2600;
+                lfo.connect(mGain);
+                mGain.connect(filter.frequency);
+              } else if (matrixLfoSlot.dest === 'res') {
+                mGain.gain.value = matrixLfoSlot.amount * 10;
+                lfo.connect(mGain);
+                mGain.connect(filter.Q);
+              } else if (matrixLfoSlot.dest === 'detune') {
+                mGain.gain.value = matrixLfoSlot.amount * 40;
+                lfo.connect(mGain);
+                osc1List.forEach(o => mGain.connect(o.detune));
+              }
+            }
+
+            lfo.start(now);
+            oscNodes.push(lfo);
+          }
+
+          voiceGroup.push({ oscNodes, osc1List, osc2Ref, vca, filter });
+        });
+
+        this.lastFreq = this.midiToFreq(midi);
+        this.activeVoices.set(midi, voiceGroup);
+        if (this.monoLegato) {
+          this.monoVoice = { midi, group: voiceGroup };
+        }
+      }
+
+      noteOff(midi, immediate = false) {
+        if (!this.ctx || !this.activeVoices.has(midi)) return;
+        const now = this.ctx.currentTime;
+        const rel = immediate ? 0.015 : this.params.envRelease;
+        const voiceGroup = this.activeVoices.get(midi);
+
+        voiceGroup.forEach(({ oscNodes, vca }) => {
+          vca.gain.cancelScheduledValues(now);
+          vca.gain.setValueAtTime(Math.max(0.0001, vca.gain.value), now);
+          vca.gain.exponentialRampToValueAtTime(0.0001, now + rel);
+
+          oscNodes.forEach(node => {
+            try {
+              node.stop(now + rel + 0.03);
+            } catch (e) {}
+          });
+        });
+
+        this.activeVoices.delete(midi);
+        if (this.monoVoice && this.monoVoice.midi === midi) {
+          this.monoVoice = null;
+        }
+      }
+
+      panic() {
+        for (const midi of Array.from(this.activeVoices.keys())) {
+          this.noteOff(midi, true);
+        }
+        this.monoVoice = null;
+      }
+
+      updateLiveEffects() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        if (this.masterGain) this.masterGain.gain.setTargetAtTime(this.params.masterVol, now, 0.02);
+        if (this.drumBusGain) this.drumBusGain.gain.setTargetAtTime(this.params.drumVol, now, 0.02);
+        if (this.delayNodeL) {
+          this.delayNodeL.delayTime.setTargetAtTime(this.params.delayTime, now, 0.03);
+          this.delayNodeR.delayTime.setTargetAtTime(this.params.delayTime * 1.5, now, 0.03);
+        }
+        if (this.delayFeedback) this.delayFeedback.gain.setTargetAtTime(this.params.delayFeedback, now, 0.03);
+        if (this.delayWet) {
+          const wet = Math.min(0.85, this.params.delayMix + this.params.macroSpace * 0.25);
+          this.delayWet.gain.setTargetAtTime(wet, now, 0.03);
+        }
+        if (this.reverbWet) {
+          const revWet = Math.min(0.85, this.params.reverbMix + this.params.macroSpace * 0.30);
+          this.reverbWet.gain.setTargetAtTime(revWet, now, 0.03);
+        }
+        if (this.resonatorWet) {
+          this.resonatorWet.gain.setTargetAtTime(this.params.resonatorMix * 0.48, now, 0.03);
+        }
+        if (this.resonatorDelay) {
+          const pitchFreq = Math.max(45, Math.min(880, this.lastFreq || 130.81));
+          this.resonatorDelay.delayTime.setTargetAtTime(1 / pitchFreq, now, 0.015);
+        }
+        if (this.compressor) {
+          this.compressor.threshold.setTargetAtTime(-10 - this.params.limiterDrive, now, 0.03);
+        }
+        this.rebuildHybridWave();
+        this.updateDistortionCurve();
+      }
+    }
+
+    const synth = new VortexTitanEngine();
+
+    const PRESETS = {
+      cyber_acid: {
+        name: "01. ACID REBIRTH 303 (Legato)",
+        osc1Wave: 'tb_square', osc1Oct: -1, osc1Detune: 12, osc1Unison: 2, osc1Level: 0.88,
+        osc2Wave: 'sawtooth', osc2Semi: 0, osc2Detune: 8, osc2Fm: 75, osc2Level: 0.60,
+        filterModel: 'tbee303', filterCutoff: 680, filterRes: 13.5, filterEnvAmt: 4200, filterDrive: 0.55, acidAccent: 0.85,
+        pedalModel: 'yellow_acid', envAttack: 0.006, envDecay: 0.26, envSustain: 0.18, envRelease: 0.18,
+        delayMix: 0.28, reverbMix: 0.26, macroAcid: 0.55
+      },
+      quantum_supersaw: {
+        name: "02. HYPERION SUPERSAW LEAD",
+        osc1Wave: 'sawtooth', osc1Oct: 0, osc1Detune: 34, osc1Unison: 5, osc1Level: 0.90,
+        osc2Wave: 'sawtooth', osc2Semi: 12, osc2Detune: 26, osc2Fm: 20, osc2Level: 0.70,
+        filterModel: 'lowpass', filterCutoff: 3400, filterRes: 3.2, filterEnvAmt: 2600, filterDrive: 0.25, acidAccent: 0.40,
+        pedalModel: 'square_tube', envAttack: 0.015, envDecay: 0.45, envSustain: 0.65, envRelease: 0.45,
+        delayMix: 0.38, reverbMix: 0.42, macroAcid: 0.30
+      },
+      spectral_pad: {
+        name: "03. NEBULA GRANULAR CLOUD",
+        osc1Wave: 'spectral_harm', osc1Oct: 0, osc1Detune: 28, osc1Unison: 4, osc1Level: 0.80,
+        osc2Wave: 'triangle', osc2Semi: 7, osc2Detune: 19, osc2Fm: 180, osc2Level: 0.65,
+        filterModel: 'bandpass', filterCutoff: 1450, filterRes: 5.5, filterEnvAmt: 1800, filterDrive: 0.20, acidAccent: 0.30,
+        pedalModel: 'bypass', envAttack: 0.45, envDecay: 1.2, envSustain: 0.78, envRelease: 1.4,
+        delayMix: 0.48, reverbMix: 0.62, macroAcid: 0.20
+      },
+      sub_reese: {
+        name: "04. DARK MATTER FM REESE",
+        osc1Wave: 'sawtooth', osc1Oct: -1, osc1Detune: 42, osc1Unison: 4, osc1Level: 0.92,
+        osc2Wave: 'sine', osc2Semi: -12, osc2Detune: 15, osc2Fm: 340, osc2Level: 0.80,
+        filterModel: 'lowpass', filterCutoff: 310, filterRes: 6.8, filterEnvAmt: 1100, filterDrive: 0.75, acidAccent: 0.55,
+        pedalModel: 'fuzzy03', envAttack: 0.03, envDecay: 0.6, envSustain: 0.80, envRelease: 0.35,
+        delayMix: 0.12, reverbMix: 0.18, macroAcid: 0.40
+      },
+      psy_arp: {
+        name: "05. GOA QUANTUM ARP 142",
+        osc1Wave: 'sawtooth', osc1Oct: 0, osc1Detune: 14, osc1Unison: 2, osc1Level: 0.85,
+        osc2Wave: 'tb_square', osc2Semi: 7, osc2Detune: 10, osc2Fm: 260, osc2Level: 0.60,
+        filterModel: 'tbee303', filterCutoff: 680, filterRes: 13.0, filterEnvAmt: 5200, filterDrive: 0.55, acidAccent: 0.85,
+        pedalModel: 'metallicon', envAttack: 0.004, envDecay: 0.16, envSustain: 0.08, envRelease: 0.12,
+        delayMix: 0.44, reverbMix: 0.30, macroAcid: 0.75
+      },
+      blade_brass: {
+        name: "06. CYBERPUNK ANALOG BRASS",
+        osc1Wave: 'sawtooth', osc1Oct: -1, osc1Detune: 24, osc1Unison: 4, osc1Level: 0.88,
+        osc2Wave: 'sawtooth', osc2Semi: 0, osc2Detune: 20, osc2Fm: 50, osc2Level: 0.78,
+        filterModel: 'lowpass', filterCutoff: 780, filterRes: 4.5, filterEnvAmt: 3900, filterDrive: 0.40, acidAccent: 0.50,
+        pedalModel: 'square_tube', envAttack: 0.09, envDecay: 0.55, envSustain: 0.60, envRelease: 0.65,
+        delayMix: 0.35, reverbMix: 0.52, macroAcid: 0.35
+      }
+    };
+
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      Object.assign(synth.params, p);
+
+      document.getElementById('osc1Wave').value = p.osc1Wave;
+      document.getElementById('osc1Oct').value = p.osc1Oct;
+      document.getElementById('osc2Wave').value = p.osc2Wave;
+      document.getElementById('osc2Semi').value = p.osc2Semi;
+      document.getElementById('filterModel').value = p.filterModel;
+      document.getElementById('pedalModel').value = p.pedalModel;
+
+      syncAllKnobsFromParams();
+      synth.updateLiveEffects();
+      showToast(`LOADED: ${p.name}`);
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('statusToast');
+      if (el) el.textContent = msg;
+    }
+
+    const knobElements = document.querySelectorAll('.knob-container');
+
+    function formatKnobValue(param, val) {
+      if (param === 'filterCutoff' || param === 'reverbDamp') return `${Math.round(val)}Hz`;
+      if (param === 'envAttack' || param === 'envDecay' || param === 'envRelease' || param === 'delayTime') {
+        return val < 1 ? `${Math.round(val * 1000)}ms` : `${val.toFixed(2)}s`;
+      }
+      if (param === 'reverbSize') return `${val.toFixed(1)}s`;
+      if (param === 'lfoRate' || param === 'chorusRate') return `${val.toFixed(1)}Hz`;
+      if (param === 'osc1Detune' || param === 'osc2Detune') return `${Math.round(val)}ct`;
+      if (param === 'osc1Unison') return `${Math.round(val)}`;
+      if (param === 'osc2Fm') return `${Math.round(val)}Hz`;
+      if (param === 'filterRes') return `${val.toFixed(1)}`;
+      if (param === 'filterEnvAmt') return `+${Math.round(val)}`;
+      if (param === 'limiterDrive') return `+${val.toFixed(1)}dB`;
+      return `${Math.round(val * 100)}%`;
+    }
+
+    function updateKnobVisual(container, val) {
+      const min = parseFloat(container.dataset.min);
+      const max = parseFloat(container.dataset.max);
+      const norm = Math.max(0, Math.min(1, (val - min) / (max - min)));
+      const deg = -135 + norm * 270;
+      const indicator = container.querySelector('.knob-indicator');
+      if (indicator) indicator.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+      const valLabel = container.querySelector('.knob-val');
+      if (valLabel) valLabel.textContent = formatKnobValue(container.dataset.param, val);
+    }
+
+    function syncAllKnobsFromParams() {
+      knobElements.forEach(k => {
+        const param = k.dataset.param;
+        if (synth.params[param] !== undefined) {
+          k.dataset.val = synth.params[param];
+          updateKnobVisual(k, synth.params[param]);
+        }
+      });
+    }
+
+    knobElements.forEach(container => {
+      const param = container.dataset.param;
+      const min = parseFloat(container.dataset.min);
+      const max = parseFloat(container.dataset.max);
+      const step = container.dataset.step ? parseFloat(container.dataset.step) : null;
+      const initial = parseFloat(container.dataset.val);
+      updateKnobVisual(container, initial);
+
+      let startY = 0;
+      let startNorm = 0;
+
+      const onMove = (clientY) => {
+        const deltaY = startY - clientY;
+        let newNorm = Math.max(0, Math.min(1, startNorm + deltaY / 130));
+        let newVal = min + newNorm * (max - min);
+        if (step) newVal = Math.round(newVal / step) * step;
+
+        container.dataset.val = newVal;
+        synth.params[param] = newVal;
+        updateKnobVisual(container, newVal);
+        synth.updateLiveEffects();
+      };
+
+      container.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        startY = e.clientY;
+        const curVal = parseFloat(container.dataset.val);
+        startNorm = (curVal - min) / (max - min);
+
+        const handleMouseMove = (ev) => onMove(ev.clientY);
+        const handleMouseUp = () => {
+          window.removeEventListener('mousemove', handleMouseMove);
+          window.removeEventListener('mouseup', handleMouseUp);
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+      });
+
+      container.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        const curVal = parseFloat(container.dataset.val);
+        startNorm = (curVal - min) / (max - min);
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        onMove(e.touches[0].clientY);
+      }, { passive: false });
+    });
+
+    const SCALES = {
+      phrygian: [0, 1, 3, 5, 7, 8, 10],
+      minor: [0, 2, 3, 5, 7, 8, 10],
+      dorian: [0, 2, 3, 5, 7, 9, 10],
+      hirajoshi: [0, 2, 3, 7, 8],
+      chromatic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    };
+
+    const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    function midiName(midi) {
+      return `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
+    }
+
+    const MAX_SEQ_STEPS = 128;
+    let activeSeqLength = 128;
+
+    const createDefaultPattern = (offset = 0) => Array.from({ length: MAX_SEQ_STEPS }, (_, i) => {
+      const barIdx = Math.floor(i / 16);
+      const localStep = i % 16;
+      const barShift = [0, 0, 3, 5, 0, 2, 7, 5][barIdx % 8] + offset;
+      return {
+        active: [0, 2, 3, 4, 6, 7, 8, 10, 11, 12, 14, 15].includes(localStep),
+        note: [36, 36, 48, 37, 36, 43, 40, 36, 36, 48, 41, 37, 36, 48, 43, 40][localStep] + barShift,
+        accent: [0, 3, 6, 10, 14].includes(localStep),
+        slide: [2, 6, 10, 15].includes(localStep)
+      };
+    });
+
+    const patternBanks = [
+      createDefaultPattern(0),
+      createDefaultPattern(2),
+      createDefaultPattern(5),
+      createDefaultPattern(-2)
+    ];
+    let currentPatternIdx = 0;
+    let chainMode = false;
+    let steps = patternBanks[0];
+
+    const createDrumLane = (type) => Array.from({ length: MAX_SEQ_STEPS }, (_, i) => {
+      const s = i % 16;
+      if (type === 'kick') return (s % 4 === 0 || (i >= 112 && s === 14)) ? 1 : 0;
+      if (type === 'snare') return (s % 8 === 4) ? 1 : 0;
+      return (s % 2 === 1 || (i >= 64 && s === 10)) ? 1 : 0;
+    });
+
+    let drumsEnabled = true;
+    const drumPatterns = {
+      kick: createDrumLane('kick'),
+      snare: createDrumLane('snare'),
+      hat: createDrumLane('hat')
+    };
+
+    let currentStep = -1;
+    let isPlaying = false;
+    let seqTimer = null;
+
+    function toggleSequencer() {
+      synth.initAudio();
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('seqPlayBtn');
+      const icon = document.getElementById('seqPlayIcon');
+      const label = document.getElementById('seqPlayLabel');
+
+      if (isPlaying) {
+        currentStep = -1;
+        icon.textContent = '⏹';
+        label.textContent = 'STOP';
+        btn.className = 'px-3.5 py-2 rounded-xl bg-rose-500/25 hover:bg-rose-500/35 text-rose-300 border border-rose-500/40 font-bold text-xs flex items-center gap-1.5 transition';
+        tickSequencer();
+      } else {
+        clearTimeout(seqTimer);
+        synth.panic();
+        icon.textContent = '▶';
+        label.textContent = 'PLAY';
+        btn.className = 'px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center gap-1.5 transition';
+        document.querySelectorAll('[id^="step-led-"]').forEach(el => {
+          el.className = 'w-full h-1.5 rounded-full bg-slate-800 transition-colors';
+        });
+      }
+    }
+
+    function renderSequencer() {
+      const grid = document.getElementById('sequencerGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (let idx = 0; idx < activeSeqLength; idx++) {
+        const step = steps[idx];
+        const col = document.createElement('div');
+        col.id = `step-col-${idx}`;
+        col.className = `w-14 shrink-0 flex flex-col items-center gap-1.5 p-1.5 rounded-xl border transition ${
+          idx % 16 === 0
+            ? 'bg-slate-900 border-cyan-500/40'
+            : idx % 4 === 0
+              ? 'bg-slate-900/95 border-slate-700'
+              : 'bg-slate-950/80 border-slate-800/90'
+        }`;
+
+        const led = document.createElement('div');
+        led.id = `step-led-${idx}`;
+        led.className = 'w-full h-1.5 rounded-full bg-slate-800 transition-colors';
+
+        const gateBtn = document.createElement('button');
+        gateBtn.className = `w-full py-1.5 rounded-lg text-[10px] font-mono-tech font-extrabold transition ${
+          step.active
+            ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30'
+            : 'bg-slate-800/80 text-slate-500 hover:text-slate-300'
+        }`;
+        gateBtn.textContent = step.active ? `● ${idx + 1}` : `${idx + 1}`;
+        gateBtn.onclick = () => {
+          step.active = !step.active;
+          renderSequencer();
+        };
+
+        const noteBtn = document.createElement('button');
+        noteBtn.className = 'w-full py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 font-mono-tech text-[10px] font-bold';
+        noteBtn.textContent = midiName(step.note);
+        noteBtn.onclick = () => {
+          const scale = SCALES[document.getElementById('scaleSelect').value];
+          const root = 36;
+          const curOffset = (step.note - root + 24) % 12;
+          const nextInScale = scale.find(s => s > curOffset) ?? scale[0];
+          const octShift = nextInScale <= curOffset ? 12 : 0;
+          let nextMidi = step.note - curOffset + nextInScale + octShift;
+          if (nextMidi > 60) nextMidi = 36 + scale[0];
+          step.note = nextMidi;
+          renderSequencer();
+        };
+
+        const accBtn = document.createElement('button');
+        accBtn.className = `w-full py-0.5 rounded text-[9px] font-bold tracking-wider border ${
+          step.accent
+            ? 'bg-emerald-500/25 text-emerald-300 border-emerald-400'
+            : 'bg-slate-900/60 text-slate-500 border-slate-800'
+        }`;
+        accBtn.textContent = 'ACC';
+        accBtn.onclick = () => {
+          step.accent = !step.accent;
+          renderSequencer();
+        };
+
+        const slideBtn = document.createElement('button');
+        slideBtn.className = `w-full py-0.5 rounded text-[9px] font-bold tracking-wider border ${
+          step.slide
+            ? 'bg-amber-500/25 text-amber-300 border-amber-400'
+            : 'bg-slate-900/60 text-slate-500 border-slate-800'
+        }`;
+        slideBtn.textContent = 'SLD';
+        slideBtn.onclick = () => {
+          step.slide = !step.slide;
+          renderSequencer();
+        };
+
+        col.append(led, gateBtn, noteBtn, accBtn, slideBtn);
+        grid.appendChild(col);
+      }
+    }
+
+    function generateAcidRiff() {
+      const scale = SCALES[document.getElementById('scaleSelect').value];
+      const root = 36;
+      const newSteps = patternBanks[currentPatternIdx].map((existing, idx) => {
+        if (idx >= activeSeqLength) return existing;
+        const active = idx % 4 === 0 ? true : Math.random() > 0.25;
+        const deg = scale[Math.floor(Math.random() * scale.length)];
+        const oct = Math.random() > 0.65 ? 12 : 0;
+        return {
+          active,
+          note: root + deg + oct,
+          accent: Math.random() > 0.65,
+          slide: Math.random() > 0.72
+        };
+      });
+      patternBanks[currentPatternIdx] = newSteps;
+      steps = patternBanks[currentPatternIdx];
+      renderSequencer();
+      showToast(`GENERATED ${activeSeqLength}-STEP 303 RIFF IN BANK ${['A','B','C','D'][currentPatternIdx]}`);
+    }
+
+    function tickSequencer() {
+      if (!isPlaying) return;
+      const bpm = Math.max(60, Math.min(220, parseInt(document.getElementById('bpmInput').value) || 136));
+      const swing = parseFloat(document.getElementById('swingSlider').value) || 0;
+      const baseStepMs = (60 / bpm / 4) * 1000;
+
+      if (currentStep >= 0) {
+        const prevLed = document.getElementById(`step-led-${currentStep}`);
+        if (prevLed) prevLed.className = 'w-full h-1.5 rounded-full bg-slate-800 transition-colors';
+      }
+
+      currentStep = (currentStep + 1) % activeSeqLength;
+
+      if (currentStep === 0 && chainMode) {
+        currentPatternIdx = (currentPatternIdx + 1) % 4;
+        steps = patternBanks[currentPatternIdx];
+        updatePatternSlotButtons();
+        renderSequencer();
+      }
+
+      const curLed = document.getElementById(`step-led-${currentStep}`);
+      if (curLed) curLed.className = 'w-full h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]';
+
+      const stepCol = document.getElementById(`step-col-${currentStep}`);
+      const scrollWrap = document.getElementById('sequencerScrollWrap');
+      if (stepCol && scrollWrap) {
+        const targetScroll = stepCol.offsetLeft - scrollWrap.clientWidth / 2 + stepCol.clientWidth / 2;
+        scrollWrap.scrollTo({ left: Math.max(0, targetScroll), behavior: 'auto' });
+      }
+
+      const stepData = steps[currentStep];
+      if (stepData && stepData.active) {
+        synth.noteOn(stepData.note, stepData.accent ? 1.0 : 0.78, stepData.accent, stepData.slide);
+        const gateLength = stepData.slide ? baseStepMs * 1.18 : baseStepMs * 0.62;
+        setTimeout(() => {
+          synth.noteOff(stepData.note);
+        }, gateLength);
+      }
+
+      if (drumsEnabled) {
+        if (drumPatterns.kick[currentStep]) synth.triggerDrum('kick', currentStep % 4 === 0);
+        if (drumPatterns.snare[currentStep]) synth.triggerDrum('snare', true);
+        if (drumPatterns.hat[currentStep]) synth.triggerDrum('hat', currentStep % 4 === 2);
+      }
+
+      const swingOffset = currentStep % 2 === 1 ? baseStepMs * swing : -baseStepMs * swing * 0.5;
+      seqTimer = setTimeout(tickSequencer, Math.max(40, baseStepMs + swingOffset));
+    }
+
+    function updatePatternSlotButtons() {
+      document.querySelectorAll('.pat-slot-btn').forEach(btn => {
+        const slot = parseInt(btn.dataset.slot);
+        btn.className = slot === currentPatternIdx
+          ? 'pat-slot-btn px-2 py-1 rounded bg-cyan-500 text-slate-950 font-mono-tech font-extrabold text-xs'
+          : 'pat-slot-btn px-2 py-1 rounded text-slate-400 hover:text-white font-mono-tech font-bold text-xs';
+      });
+    }
+
+    function renderDrumGrid() {
+      const container = document.getElementById('drumGridContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const tracks = [
+        { key: 'kick', label: '909 PUNCH KICK', color: 'bg-rose-500' },
+        { key: 'snare', label: 'ANALOG SNARE', color: 'bg-amber-400' },
+        { key: 'hat', label: 'CLOSED HI-HAT', color: 'bg-cyan-400' }
+      ];
+
+      tracks.forEach(tr => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 min-w-[820px] bg-slate-950/75 p-1.5 rounded-xl border border-slate-800';
+
+        const lbl = document.createElement('button');
+        lbl.className = 'w-32 text-left px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-[10px] font-mono-tech font-bold text-slate-200';
+        lbl.textContent = tr.label;
+        lbl.onclick = () => { synth.initAudio(); synth.triggerDrum(tr.key, true); };
+        row.appendChild(lbl);
+
+        const stepsWrap = document.createElement('div');
+        stepsWrap.className = 'flex gap-1 w-max';
+
+        for (let idx = 0; idx < activeSeqLength; idx++) {
+          const val = drumPatterns[tr.key][idx];
+          const pad = document.createElement('button');
+          pad.className = `w-5 h-6 shrink-0 rounded transition ${
+            val
+              ? `${tr.color} shadow-sm`
+              : idx % 16 === 0
+                ? 'bg-slate-700 hover:bg-slate-600'
+                : idx % 4 === 0
+                  ? 'bg-slate-800 hover:bg-slate-700'
+                  : 'bg-slate-900 hover:bg-slate-800'
+          }`;
+          pad.title = `Step ${idx + 1} (Bar ${Math.floor(idx / 16) + 1})`;
+          pad.onclick = () => {
+            synth.initAudio();
+            drumPatterns[tr.key][idx] = drumPatterns[tr.key][idx] ? 0 : 1;
+            if (drumPatterns[tr.key][idx]) synth.triggerDrum(tr.key, true);
+            renderDrumGrid();
+          };
+          stepsWrap.appendChild(pad);
+        }
+
+        row.appendChild(stepsWrap);
+        container.appendChild(row);
+      });
+    }
+
+    function renderModMatrix() {
+      const container = document.getElementById('modMatrixContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const sources = [
+        { val: 'lfo1', label: 'LFO 1 (Sine)' },
+        { val: 'accent', label: '303 Step Accent' },
+        { val: 'modwheel', label: 'Mod Wheel / MPE' },
+        { val: 'velocity', label: 'Note Velocity' },
+        { val: 'env', label: 'Filter Env' }
+      ];
+      const dests = [
+        { val: 'cutoff', label: 'Filter Cutoff' },
+        { val: 'res', label: '303 Resonance' },
+        { val: 'fm', label: 'OSC 2 FM Index' },
+        { val: 'detune', label: 'Unison Detune' }
+      ];
+
+      synth.modMatrix.forEach((slot, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-950/85 p-2.5 rounded-xl border border-slate-800 flex flex-col gap-2';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between text-[10px] font-mono-tech font-bold text-cyan-400';
+        header.innerHTML = `<span>MOD SLOT ${idx + 1}</span><span>${Math.round(slot.amount * 100)}%</span>`;
+
+        const srcSel = document.createElement('select');
+        srcSel.className = 'bg-slate-900 text-slate-200 text-xs font-mono-tech px-2 py-1 rounded border border-slate-700';
+        sources.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.val; opt.textContent = s.label;
+          if (s.val === slot.source) opt.selected = true;
+          srcSel.appendChild(opt);
+        });
+        srcSel.onchange = (e) => { slot.source = e.target.value; };
+
+        const dstSel = document.createElement('select');
+        dstSel.className = 'bg-slate-900 text-emerald-300 text-xs font-mono-tech px-2 py-1 rounded border border-slate-700';
+        dests.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d.val; opt.textContent = `→ ${d.label}`;
+          if (d.val === slot.dest) opt.selected = true;
+          dstSel.appendChild(opt);
+        });
+        dstSel.onchange = (e) => { slot.dest = e.target.value; };
+
+        const slider = document.createElement('input');
+        slider.type = 'range'; slider.min = '-1'; slider.max = '1'; slider.step = '0.05';
+        slider.value = slot.amount;
+        slider.className = 'synth-slider w-full';
+        slider.oninput = (e) => {
+          slot.amount = parseFloat(e.target.value);
+          header.lastElementChild.textContent = `${Math.round(slot.amount * 100)}%`;
+        };
+
+        card.append(header, srcSel, dstSel, slider);
+        container.appendChild(card);
+      });
+    }
+
+    function exportPatternToMidi() {
+      const tpq = 120;
+      const stepTicks = 30;
+      const events = [];
+
+      let delta = 0;
+      steps.slice(0, activeSeqLength).forEach((st) => {
+        if (st.active) {
+          const vel = st.accent ? 120 : 88;
+          const gate = st.slide ? 34 : 20;
+          events.push({ tick: delta, bytes: [0x90, st.note, vel] });
+          events.push({ tick: delta + gate, bytes: [0x80, st.note, 0x00] });
+        }
+        delta += stepTicks;
+      });
+
+      events.sort((a, b) => a.tick - b.tick);
+
+      const trackBytes = [];
+      let lastTick = 0;
+      events.forEach(ev => {
+        const dt = ev.tick - lastTick;
+        lastTick = ev.tick;
+        if (dt < 128) {
+          trackBytes.push(dt);
+        } else {
+          trackBytes.push(((dt >> 7) & 0x7f) | 0x80, dt & 0x7f);
+        }
+        trackBytes.push(...ev.bytes);
+      });
+      trackBytes.push(0x00, 0xFF, 0x2F, 0x00);
+
+      const header = [
+        0x4D, 0x54, 0x68, 0x64,
+        0x00, 0x00, 0x00, 0x06,
+        0x00, 0x00,
+        0x00, 0x01,
+        (tpq >> 8) & 0xFF, tpq & 0xFF
+      ];
+
+      const trkLen = trackBytes.length;
+      const trkHeader = [
+        0x4D, 0x54, 0x72, 0x6B,
+        (trkLen >> 24) & 0xFF, (trkLen >> 16) & 0xFF, (trkLen >> 8) & 0xFF, trkLen & 0xFF
+      ];
+
+      const midiData = new Uint8Array([...header, ...trkHeader, ...trackBytes]);
+      const blob = new Blob([midiData], { type: 'audio/midi' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `VortexTitan_Pattern_${['A','B','C','D'][currentPatternIdx]}.mid`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`💾 EXPORTED PATTERN ${['A','B','C','D'][currentPatternIdx]} AS .MID`);
+    }
+
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let isRecordingWav = false;
+
+    function toggleWavRecording() {
+      synth.initAudio();
+      const btn = document.getElementById('wavRecBtn');
+      const dot = document.getElementById('wavRecDot');
+      const lbl = document.getElementById('wavRecLabel');
+
+      if (!isRecordingWav) {
+        if (typeof MediaRecorder === 'undefined') {
+          showToast("⚠️ AUDIO RECORDER UNSUPPORTED IN THIS BROWSER");
+          return;
+        }
+        const dest = synth.ctx.createMediaStreamDestination();
+        synth.compressor.connect(dest);
+        mediaRecorder = new MediaRecorder(dest.stream);
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `VortexTitan_Session_${Date.now()}.webm`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast("🎧 AUDIO CAPTURE DOWNLOADED!");
+        };
+
+        mediaRecorder.start();
+        isRecordingWav = true;
+        dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
+        lbl.textContent = 'STOP REC';
+        btn.className = 'px-3 py-2 rounded-xl bg-rose-500/25 text-rose-300 border border-rose-500/50 font-bold text-xs flex items-center gap-1.5 transition';
+        showToast("🔴 RECORDING LIVE AUDIO STREAM...");
+      } else {
+        mediaRecorder.stop();
+        isRecordingWav = false;
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        lbl.textContent = 'REC AUDIO';
+        btn.className = 'px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center gap-1 transition';
+      }
+    }
+
+    function initWebMIDI() {
+      const badge = document.getElementById('midiStatusBadge');
+      if (!badge) return;
+      if (!navigator.requestMIDIAccess) {
+        badge.textContent = 'MIDI: BROWSER N/A';
+        return;
+      }
+
+      navigator.requestMIDIAccess().then((midiAccess) => {
+        const updateDevices = () => {
+          const inputs = Array.from(midiAccess.inputs.values());
+          if (inputs.length > 0) {
+            badge.textContent = `MIDI/MPE: ${inputs[0].name.slice(0, 14).toUpperCase()}`;
+            badge.className = 'px-2 py-0.5 text-[10px] font-mono-tech font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full cursor-pointer';
+            inputs.forEach(input => {
+              input.onmidimessage = (msg) => {
+                const [status, data1, data2] = msg.data;
+                const cmd = status & 0xf0;
+                if (cmd === 0x90 && data2 > 0) {
+                  synth.noteOn(data1, data2 / 127, data2 > 112, false);
+                  highlightKeyUI(data1, true);
+                } else if (cmd === 0x80 || (cmd === 0x90 && data2 === 0)) {
+                  synth.noteOff(data1);
+                  highlightKeyUI(data1, false);
+                } else if (cmd === 0xE0) {
+                  const bend = ((data2 << 7) | data1) - 8192;
+                  synth.pitchBend = (bend / 8192) * 2;
+                  document.getElementById('pitchWheel').value = synth.pitchBend;
+                } else if (cmd === 0xB0 && data1 === 1) {
+                  synth.modWheelVal = data2 / 127;
+                  document.getElementById('modWheel').value = synth.modWheelVal;
+                }
+              };
+            });
+          } else {
+            badge.textContent = 'MIDI: NO HARDWARE';
+          }
+        };
+        updateDevices();
+        midiAccess.onstatechange = updateDevices;
+      }).catch(() => {
+        badge.textContent = 'MIDI: BLOCKED';
+      });
+    }
+
+    const heldKeys = new Set();
+    let arpTimer = null;
+    let arpIndex = 0;
+
+    function buildPiano() {
+      const container = document.getElementById('pianoContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const startMidi = (synth.baseOctave + 1) * 12;
+      const totalKeys = 29;
+      const isBlackKey = (m) => [1, 3, 6, 8, 10].includes(m % 12);
+
+      const whiteNotes = [];
+      for (let i = 0; i < totalKeys; i++) {
+        const midi = startMidi + i;
+        if (!isBlackKey(midi)) whiteNotes.push(midi);
+      }
+
+      const whiteWidthPct = 100 / whiteNotes.length;
+
+      whiteNotes.forEach((midi, idx) => {
+        const key = document.createElement('div');
+        key.dataset.midi = midi;
+        key.className = 'piano-white absolute top-1.5 bottom-1.5 cursor-pointer flex flex-col justify-end items-center pb-1.5';
+        key.style.left = `calc(${idx * whiteWidthPct}% + 2px)`;
+        key.style.width = `calc(${whiteWidthPct}% - 4px)`;
+
+        if (midi % 12 === 0) {
+          const lbl = document.createElement('span');
+          lbl.className = 'text-[9px] font-mono-tech font-bold text-slate-500 pointer-events-none';
+          lbl.textContent = midiName(midi);
+          key.appendChild(lbl);
+        }
+
+        const down = (e) => { e.preventDefault(); triggerKeyDown(midi); };
+        const up = (e) => { e.preventDefault(); triggerKeyUp(midi); };
+
+        key.addEventListener('mousedown', down);
+        key.addEventListener('mouseup', up);
+        key.addEventListener('mouseleave', () => { if (heldKeys.has(midi)) triggerKeyUp(midi); });
+        key.addEventListener('touchstart', down, { passive: false });
+        key.addEventListener('touchend', up, { passive: false });
+
+        container.appendChild(key);
+      });
+
+      let whiteIndex = 0;
+      for (let i = 0; i < totalKeys; i++) {
+        const midi = startMidi + i;
+        if (!isBlackKey(midi)) {
+          whiteIndex++;
+        } else {
+          const key = document.createElement('div');
+          key.dataset.midi = midi;
+          key.className = 'piano-black absolute top-1.5 h-[58%] cursor-pointer';
+          const blackW = whiteWidthPct * 0.62;
+          key.style.left = `calc(${whiteIndex * whiteWidthPct - blackW / 2}%)`;
+          key.style.width = `${blackW}%`;
+
+          const down = (e) => { e.preventDefault(); e.stopPropagation(); triggerKeyDown(midi); };
+          const up = (e) => { e.preventDefault(); e.stopPropagation(); triggerKeyUp(midi); };
+
+          key.addEventListener('mousedown', down);
+          key.addEventListener('mouseup', up);
+          key.addEventListener('mouseleave', () => { if (heldKeys.has(midi)) triggerKeyUp(midi); });
+          key.addEventListener('touchstart', down, { passive: false });
+          key.addEventListener('touchend', up, { passive: false });
+
+          container.appendChild(key);
+        }
+      }
+    }
+
+    function highlightKeyUI(midi, active) {
+      const el = document.querySelector(`[data-midi="${midi}"]`);
+      if (el) {
+        if (active) el.classList.add('active');
+        else el.classList.remove('active');
+      }
+    }
+
+    function triggerKeyDown(midi) {
+      if (heldKeys.has(midi)) return;
+      heldKeys.add(midi);
+      highlightKeyUI(midi, true);
+
+      const arpSelect = document.getElementById('arpMode');
+      const arpMode = arpSelect ? arpSelect.value : 'off';
+      if (arpMode === 'off') {
+        synth.noteOn(midi, 0.88, false, heldKeys.size > 1);
+      } else if (!arpTimer) {
+        startArpeggiator();
+      }
+    }
+
+    function triggerKeyUp(midi) {
+      heldKeys.delete(midi);
+      highlightKeyUI(midi, false);
+
+      const arpSelect = document.getElementById('arpMode');
+      const arpMode = arpSelect ? arpSelect.value : 'off';
+      if (arpMode === 'off') {
+        synth.noteOff(midi);
+      }
+    }
+
+    function startArpeggiator() {
+      const stepArp = () => {
+        if (heldKeys.size === 0) {
+          clearInterval(arpTimer);
+          arpTimer = null;
+          return;
+        }
+        const notes = Array.from(heldKeys).sort((a, b) => a - b);
+        const mode = document.getElementById('arpMode').value;
+        let noteToPlay = notes[0];
+
+        if (mode === 'up') {
+          noteToPlay = notes[arpIndex % notes.length];
+        } else if (mode === 'down') {
+          noteToPlay = notes[notes.length - 1 - (arpIndex % notes.length)];
+        } else if (mode === 'updown') {
+          const seq = notes.length > 1 ? [...notes, ...notes.slice(1, -1).reverse()] : notes;
+          noteToPlay = seq[arpIndex % seq.length];
+        } else {
+          noteToPlay = notes[Math.floor(Math.random() * notes.length)];
+        }
+
+        arpIndex++;
+        synth.noteOn(noteToPlay, 0.85, arpIndex % 4 === 1, false);
+        setTimeout(() => synth.noteOff(noteToPlay), 110);
+      };
+
+      stepArp();
+      arpTimer = setInterval(stepArp, 135);
+    }
+
+    const KEYBOARD_MAP = {
+      'a': 0, 'w': 1, 's': 2, 'e': 3, 'd': 4, 'f': 5, 't': 6,
+      'g': 7, 'y': 8, 'h': 9, 'u': 10, 'j': 11, 'k': 12, 'o': 13, 'l': 14, 'p': 15
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      const key = e.key.toLowerCase();
+      if (key === ' ') {
+        e.preventDefault();
+        toggleSequencer();
+        return;
+      }
+      if (KEYBOARD_MAP[key] !== undefined) {
+        const midi = (synth.baseOctave + 1) * 12 + KEYBOARD_MAP[key];
+        triggerKeyDown(midi);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      const key = e.key.toLowerCase();
+      if (KEYBOARD_MAP[key] !== undefined) {
+        const midi = (synth.baseOctave + 1) * 12 + KEYBOARD_MAP[key];
+        triggerKeyUp(midi);
+      }
+    });
+
+    let scopeMode = 'hybrid';
+
+    function startVisualizerLoop() {
+      const canvas = document.getElementById('visualizerCanvas');
+      if (!canvas) return;
+      const ctx2d = canvas.getContext('2d');
+      const freqData = new Uint8Array(1024);
+      const timeData = new Uint8Array(1024);
+      let latestMatchedPresetKey = 'cyber_acid';
+      const sidLog = [];
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.max(1, rect.width * window.devicePixelRatio);
+        canvas.height = Math.max(1, rect.height * window.devicePixelRatio);
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      function freqToNoteName(freq) {
+        if (!freq || freq < 20 || freq > 4500) return '--';
+        const midi = Math.round(12 * Math.log2(freq / 440) + 69);
+        const names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const note = names[((midi % 12) + 12) % 12];
+        const oct = Math.floor(midi / 12) - 1;
+        return `${note}${oct}`;
+      }
+
+      function runSoundsIdAnalysis() {
+        if (!synth.analyser || !synth.ctx) {
+          return {
+            freq: synth.lastFreq || 130.81,
+            note: freqToNoteName(synth.lastFreq || 130.81),
+            centroid: 1420,
+            timbre: '303 Acid Resonant',
+            presetKey: 'cyber_acid',
+            presetName: PRESETS.cyber_acid.name,
+            confidence: 88
+          };
+        }
+
+        synth.analyser.getByteFrequencyData(freqData);
+        synth.analyser.getByteTimeDomainData(timeData);
+
+        const nyquist = synth.ctx.sampleRate / 2;
+        const binHz = nyquist / freqData.length;
+
+        let maxMag = 0;
+        let peakBin = 1;
+        let weightedSum = 0;
+        let magSum = 0;
+
+        for (let i = 1; i < freqData.length; i++) {
+          const mag = freqData[i];
+          const hz = i * binHz;
+          if (mag > maxMag && hz >= 32 && hz <= 2200) {
+            maxMag = mag;
+            peakBin = i;
+          }
+          weightedSum += hz * mag;
+          magSum += mag;
+        }
+
+        const detectedFreq = maxMag > 8 ? +(peakBin * binHz).toFixed(1) : +(synth.lastFreq || 130.81).toFixed(1);
+        const centroid = magSum > 0 ? Math.round(weightedSum / magSum) : 950;
+
+        let timbre = synth.micActive ? 'Live Acoustic / Mic' : 'Hybrid Harmonic';
+        if (!synth.micActive) {
+          if (synth.params.filterModel === 'tbee303' || synth.params.filterRes > 10) {
+            timbre = '303 Acid Resonant';
+          } else if (synth.params.osc1Unison >= 4 && synth.params.osc1Wave === 'sawtooth') {
+            timbre = 'Hyper Unison Saw';
+          } else if (synth.granularEnabled || synth.params.envAttack > 0.25) {
+            timbre = 'Spectral Granular Pad';
+          } else if (synth.params.osc2Fm > 180) {
+            timbre = 'FM Metallic / Reese';
+          }
+        }
+
+        let bestKey = 'cyber_acid';
+        let bestScore = -Infinity;
+        Object.entries(PRESETS).forEach(([key, preset]) => {
+          const cutDiff = Math.abs((preset.filterCutoff || 800) - synth.params.filterCutoff) / 4000;
+          const resDiff = Math.abs((preset.filterRes || 8) - synth.params.filterRes) / 20;
+          const decDiff = Math.abs((preset.envDecay || 0.25) - synth.params.envDecay) / 2;
+          const uniDiff = Math.abs((preset.osc1Unison || 2) - synth.params.osc1Unison) / 5;
+          const score = 100 - (cutDiff * 35 + resDiff * 30 + decDiff * 20 + uniDiff * 15);
+          if (score > bestScore) {
+            bestScore = score;
+            bestKey = key;
+          }
+        });
+
+        const confidence = Math.max(62, Math.min(99, Math.round(bestScore)));
+        const noteLabel = freqToNoteName(detectedFreq);
+        latestMatchedPresetKey = bestKey;
+
+        return {
+          freq: detectedFreq,
+          note: noteLabel,
+          centroid,
+          timbre,
+          presetKey: bestKey,
+          presetName: PRESETS[bestKey]?.name || bestKey,
+          confidence
+        };
+      }
+
+      function updateSoundsIdUI(info, recordHistory = false) {
+        const overlay = document.getElementById('soundsIdOverlay');
+        const confEl = document.getElementById('soundsIdConfidence');
+        const matchEl = document.getElementById('soundsIdMatchName');
+        const metaEl = document.getElementById('soundsIdMeta');
+        const pitchEl = document.getElementById('sidPitchReadout');
+        const centEl = document.getElementById('sidCentroidReadout');
+        const timbreEl = document.getElementById('sidTimbreReadout');
+        const bestEl = document.getElementById('sidBestMatchReadout');
+        const countEl = document.getElementById('sidHistoryCount');
+        const listEl = document.getElementById('soundsIdLogList');
+
+        if (overlay) overlay.classList.remove('hidden');
+        if (confEl) confEl.textContent = `${info.confidence}%`;
+        if (matchEl) matchEl.textContent = info.presetName;
+        if (metaEl) metaEl.textContent = `${info.freq} Hz (${info.note}) • ${info.timbre}`;
+        if (pitchEl) pitchEl.textContent = `${info.freq} Hz (${info.note})`;
+        if (centEl) centEl.textContent = `${info.centroid} Hz`;
+        if (timbreEl) timbreEl.textContent = info.timbre;
+        if (bestEl) bestEl.textContent = `${info.presetName} (${info.confidence}%)`;
+
+        if (recordHistory) {
+          sidLog.unshift({ ...info, time: new Date().toLocaleTimeString() });
+          if (sidLog.length > 15) sidLog.pop();
+          if (countEl) countEl.textContent = `${sidLog.length} SCANS`;
+          if (listEl) {
+            listEl.innerHTML = sidLog.map(item => `
+              <div class="flex items-center justify-between bg-slate-900/90 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                <div class="truncate pr-2">
+                  <span class="text-indigo-300 font-bold">${item.presetName}</span>
+                  <span class="text-slate-400 ml-1.5">${item.freq}Hz (${item.note}) • ${item.timbre}</span>
+                </div>
+                <span class="text-emerald-400 font-bold shrink-0">${item.confidence}%</span>
+              </div>
+            `).join('');
+          }
+        }
+      }
+
+      const scanBtn = document.getElementById('scanSoundIdBtn');
+      if (scanBtn) {
+        scanBtn.addEventListener('click', () => {
+          synth.initAudio();
+          const res = runSoundsIdAnalysis();
+          updateSoundsIdUI(res, true);
+          showToast(`🔊 SOUNDS ID: ${res.presetName} (${res.confidence}%)`);
+        });
+      }
+
+      const applyMatchBtn = document.getElementById('sidApplyMatchBtn');
+      if (applyMatchBtn) {
+        applyMatchBtn.addEventListener('click', () => {
+          const presetSelect = document.getElementById('presetSelect');
+          if (presetSelect && PRESETS[latestMatchedPresetKey]) {
+            presetSelect.value = latestMatchedPresetKey;
+            applyPreset(latestMatchedPresetKey);
+          }
+        });
+      }
+
+      const soundsIdBadge = document.getElementById('soundsIdBadge');
+      if (soundsIdBadge) {
+        soundsIdBadge.addEventListener('click', () => {
+          const tabBtn = document.querySelector('.tab-btn[data-tab="soundsIdTab"]');
+          if (tabBtn) tabBtn.click();
+          const res = runSoundsIdAnalysis();
+          updateSoundsIdUI(res, true);
+        });
+      }
+
+      let lastSidSampleTime = 0;
+      function tickSoundsIdIfEnabled(nowMs) {
+        const autoToggle = document.getElementById('sidAutoTrackToggle');
+        const enabled = autoToggle ? autoToggle.checked : true;
+        if (enabled && synth.ctx && nowMs - lastSidSampleTime > 320) {
+          lastSidSampleTime = nowMs;
+          const res = runSoundsIdAnalysis();
+          updateSoundsIdUI(res, false);
+        }
+      }
+
+      function render(nowMs = performance.now()) {
+        requestAnimationFrame(render);
+        tickSoundsIdIfEnabled(nowMs);
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx2d.clearRect(0, 0, w, h);
+
+        ctx2d.strokeStyle = 'rgba(0, 240, 255, 0.07)';
+        ctx2d.lineWidth = 1;
+        for (let gx = 0; gx < w; gx += 40) {
+          ctx2d.beginPath(); ctx2d.moveTo(gx, 0); ctx2d.lineTo(gx, h); ctx2d.stroke();
+        }
+        for (let gy = 0; gy < h; gy += 28) {
+          ctx2d.beginPath(); ctx2d.moveTo(0, gy); ctx2d.lineTo(w, gy); ctx2d.stroke();
+        }
+
+        if (!synth.analyser) {
+          ctx2d.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+          ctx2d.lineWidth = 2;
+          ctx2d.beginPath();
+          for (let x = 0; x < w; x += 4) {
+            const y = h / 2 + Math.sin(x * 0.04 + nowMs * 0.005) * (h * 0.16);
+            if (x === 0) ctx2d.moveTo(x, y);
+            else ctx2d.lineTo(x, y);
+          }
+          ctx2d.stroke();
+          return;
+        }
+
+        synth.analyser.getByteFrequencyData(freqData);
+        synth.analyser.getByteTimeDomainData(timeData);
+
+        if (scopeMode === 'fft' || scopeMode === 'hybrid') {
+          const barCount = 96;
+          const barW = w / barCount;
+          for (let i = 0; i < barCount; i++) {
+            const v = freqData[i * 2] / 255;
+            const barH = v * h * 0.85;
+            const grad = ctx2d.createLinearGradient(0, h, 0, h - barH);
+            grad.addColorStop(0, 'rgba(0, 240, 255, 0.15)');
+            grad.addColorStop(0.7, 'rgba(0, 240, 255, 0.55)');
+            grad.addColorStop(1, 'rgba(255, 42, 133, 0.85)');
+            ctx2d.fillStyle = grad;
+            ctx2d.fillRect(i * barW + 1, h - barH, Math.max(1, barW - 2), barH);
+          }
+        }
+
+        if (scopeMode === 'wave' || scopeMode === 'hybrid') {
+          ctx2d.strokeStyle = '#00f0ff';
+          ctx2d.lineWidth = 2.2;
+          ctx2d.shadowColor = '#00f0ff';
+          ctx2d.shadowBlur = 8;
+          ctx2d.beginPath();
+          const sliceWidth = w / timeData.length;
+          let x = 0;
+          for (let i = 0; i < timeData.length; i++) {
+            const v = (timeData[i] - 128) / 128;
+            const y = h / 2 + v * (h * 0.42);
+            if (i === 0) ctx2d.moveTo(x, y);
+            else ctx2d.lineTo(x, y);
+            x += sliceWidth;
+          }
+          ctx2d.stroke();
+          ctx2d.shadowBlur = 0;
+        }
+      }
+
+      render();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      buildPiano();
+      renderSequencer();
+      renderDrumGrid();
+      renderModMatrix();
+      syncAllKnobsFromParams();
+      startVisualizerLoop();
+      initWebMIDI();
+
+      const overlay = document.getElementById('audioInitOverlay');
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          synth.initAudio();
+          synth.noteOn(48, 0.7, false, false);
+          setTimeout(() => synth.noteOff(48), 240);
+        });
+      }
+
+      const micBtn = document.getElementById('micInputBtn');
+      if (micBtn) micBtn.addEventListener('click', () => synth.toggleMicInput());
+
+      const xyPad = document.getElementById('xyMorphPad');
+      const xyPuck = document.getElementById('xyPuck');
+      const xyReadout = document.getElementById('xyReadout');
+      const xySpringBtn = document.getElementById('xySpringBtn');
+      const dimModeBtn = document.getElementById('dimModeBtn');
+      const zAxisSlider = document.getElementById('zAxisSlider');
+      const hyperAxisSlider = document.getElementById('hyperAxisSlider');
+      const zAxisVal = document.getElementById('zAxisVal');
+      const hyperAxisVal = document.getElementById('hyperAxisVal');
+
+      let xySpringMode = true;
+      let xyDragging = false;
+      const dimModes = ['3D', '4D', '5D'];
+      let dimIdx = 2;
+      let curNormX = 0.5;
+      let curNormY = 0.5;
+      let curZ = 0.5;
+      let curHyper = 0.5;
+
+      function applyXYZHyperState() {
+        const activeDim = dimModes[dimIdx];
+        const invY = 1 - curNormY;
+        const z = curZ;
+        const hyper = curHyper;
+
+        synth.params.filterCutoff = Math.round(120 + curNormX * 8380);
+        synth.params.filterRes = +(1.5 + invY * 18.5).toFixed(1);
+        synth.params.macroSpace = +invY.toFixed(2);
+        synth.params.hybridMorph = +z.toFixed(2);
+        synth.params.resonatorMix = +(z * 0.85).toFixed(2);
+
+        if (activeDim === '4D' || activeDim === '5D') {
+          synth.params.sidechainDepth = +hyper.toFixed(2);
+        }
+        if (activeDim === '5D') {
+          synth.params.osc2Fm = Math.round(hyper * 420);
+          synth.params.macroGrit = +(hyper * 0.75).toFixed(2);
+        }
+
+        if (xyPuck) {
+          xyPuck.style.left = `${curNormX * 100}%`;
+          xyPuck.style.top = `${curNormY * 100}%`;
+          const scale = 0.7 + z * 0.85;
+          xyPuck.style.transform = `scale(${scale.toFixed(2)})`;
+        }
+        if (zAxisSlider) zAxisSlider.value = z;
+        if (hyperAxisSlider) hyperAxisSlider.value = hyper;
+        if (zAxisVal) zAxisVal.textContent = `${Math.round(z * 100)}%`;
+        if (hyperAxisVal) hyperAxisVal.textContent = `${Math.round(hyper * 100)}%`;
+
+        syncAllKnobsFromParams();
+        synth.updateLiveEffects();
+
+        if (xyReadout) {
+          xyReadout.textContent = `[${activeDim}] X:${Math.round(curNormX * 100)}% Y:${Math.round(invY * 100)}% Z:${Math.round(z * 100)}% 4D/5D:${Math.round(hyper * 100)}%`;
+        }
+      }
+
+      function setXYPosition(normX, normY, zOverride = null) {
+        curNormX = Math.max(0, Math.min(1, normX));
+        curNormY = Math.max(0, Math.min(1, normY));
+        if (zOverride !== null) curZ = Math.max(0, Math.min(1, zOverride));
+        applyXYZHyperState();
+      }
+
+      if (xyPad) {
+        const updateFromEvent = (clientX, clientY) => {
+          const rect = xyPad.getBoundingClientRect();
+          setXYPosition((clientX - rect.left) / rect.width, (clientY - rect.top) / rect.height);
+        };
+        xyPad.addEventListener('mousedown', (e) => {
+          synth.initAudio();
+          xyDragging = true;
+          updateFromEvent(e.clientX, e.clientY);
+        });
+        xyPad.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          synth.initAudio();
+          const delta = e.deltaY < 0 ? 0.06 : -0.06;
+          setXYPosition(curNormX, curNormY, curZ + delta);
+        }, { passive: false });
+        window.addEventListener('mousemove', (e) => {
+          if (xyDragging) updateFromEvent(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseup', () => {
+          if (!xyDragging) return;
+          xyDragging = false;
+          if (xySpringMode) setXYPosition(0.5, 0.5, 0.5);
+        });
+        xyPad.addEventListener('touchstart', (e) => {
+          synth.initAudio();
+          xyDragging = true;
+          const t = e.touches[0];
+          updateFromEvent(t.clientX, t.clientY);
+        }, { passive: true });
+        xyPad.addEventListener('touchmove', (e) => {
+          if (!xyDragging) return;
+          e.preventDefault();
+          const t = e.touches[0];
+          updateFromEvent(t.clientX, t.clientY);
+        }, { passive: false });
+        xyPad.addEventListener('touchend', () => {
+          xyDragging = false;
+          if (xySpringMode) setXYPosition(0.5, 0.5, 0.5);
+        });
+      }
+
+      if (zAxisSlider) {
+        zAxisSlider.addEventListener('input', (e) => {
+          curZ = parseFloat(e.target.value);
+          applyXYZHyperState();
+        });
+      }
+      if (hyperAxisSlider) {
+        hyperAxisSlider.addEventListener('input', (e) => {
+          curHyper = parseFloat(e.target.value);
+          applyXYZHyperState();
+        });
+      }
+      if (dimModeBtn) {
+        dimModeBtn.addEventListener('click', () => {
+          dimIdx = (dimIdx + 1) % dimModes.length;
+          dimModeBtn.textContent = `DIM: ${dimModes[dimIdx]}`;
+          applyXYZHyperState();
+          showToast(`PAD DIMENSIONALITY SET TO ${dimModes[dimIdx]}`);
+        });
+      }
+      if (xySpringBtn) {
+        xySpringBtn.addEventListener('click', () => {
+          xySpringMode = !xySpringMode;
+          xySpringBtn.textContent = xySpringMode ? 'MODE: SPRING' : 'MODE: HOLD';
+        });
+      }
+
+      document.getElementById('midiStatusBadge').addEventListener('click', initWebMIDI);
+
+      document.getElementById('skinSelect').addEventListener('change', (e) => {
+        document.body.className = 'min-h-screen p-2 sm:p-4 lg:p-6 flex flex-col items-center justify-center';
+        if (e.target.value !== 'default') {
+          document.body.classList.add(`skin-${e.target.value}`);
+        }
+        showToast(`THEME APPLIED: ${e.target.options[e.target.selectedIndex].text}`);
+      });
+
+      document.getElementById('exportPatchBtn').addEventListener('click', () => {
+        const patchData = {
+          version: '6.0',
+          params: synth.params,
+          modMatrix: synth.modMatrix,
+          pattern: steps
+        };
+        const blob = new Blob([JSON.stringify(patchData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `VortexTitan6_Patch_${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("💾 PATCH SAVED AS JSON!");
+      });
+
+      document.getElementById('importPatchBtn').addEventListener('click', () => {
+        document.getElementById('importPatchFile').click();
+      });
+
+      document.getElementById('importPatchFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (data.params) Object.assign(synth.params, data.params);
+            if (data.modMatrix) synth.modMatrix = data.modMatrix;
+            if (data.pattern) {
+              patternBanks[currentPatternIdx] = data.pattern;
+              steps = patternBanks[currentPatternIdx];
+            }
+            syncAllKnobsFromParams();
+            renderModMatrix();
+            renderSequencer();
+            synth.updateLiveEffects();
+            showToast("📂 CUSTOM JSON PATCH LOADED!");
+          } catch (err) {
+            showToast("⚠️ INVALID PATCH FILE");
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById('voiceModeBtn').addEventListener('click', (e) => {
+        synth.monoLegato = !synth.monoLegato;
+        synth.panic();
+        e.target.textContent = synth.monoLegato ? 'MODE: MONO LEGATO' : 'MODE: POLY 16';
+        e.target.className = synth.monoLegato
+          ? 'px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono-tech text-[10px] font-bold'
+          : 'px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono-tech text-[10px] font-bold';
+      });
+
+      document.getElementById('granularToggleBtn').addEventListener('click', (e) => {
+        synth.initAudio();
+        synth.granularEnabled = !synth.granularEnabled;
+        e.target.textContent = synth.granularEnabled ? 'GRANULAR: ON' : 'GRANULAR: OFF';
+        e.target.className = synth.granularEnabled
+          ? 'px-2 py-0.5 rounded bg-fuchsia-500 text-slate-950 font-mono-tech text-[10px] font-extrabold'
+          : 'px-2 py-0.5 rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 font-mono-tech text-[10px] font-bold';
+      });
+
+      document.getElementById('wavRecBtn').addEventListener('click', toggleWavRecording);
+
+      document.querySelectorAll('.pat-slot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentPatternIdx = parseInt(btn.dataset.slot);
+          steps = patternBanks[currentPatternIdx];
+          updatePatternSlotButtons();
+          renderSequencer();
+          showToast(`PATTERN BANK ${['A','B','C','D'][currentPatternIdx]} ACTIVE`);
+        });
+      });
+
+      document.getElementById('chainModeBtn').addEventListener('click', (e) => {
+        chainMode = !chainMode;
+        e.target.textContent = chainMode ? 'CHAIN: A→D' : 'CHAIN: OFF';
+        e.target.className = chainMode
+          ? 'px-2 py-1 rounded-lg bg-cyan-500/25 text-cyan-300 text-[11px] font-mono-tech font-bold border border-cyan-500/40'
+          : 'px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono-tech font-bold border border-slate-700';
+      });
+
+      document.getElementById('reversePatternBtn').addEventListener('click', () => {
+        const sliced = steps.slice(0, activeSeqLength).reverse();
+        for (let i = 0; i < activeSeqLength; i++) steps[i] = sliced[i];
+        renderSequencer();
+        showToast(`⇄ REVERSED ${activeSeqLength} STEPS`);
+      });
+
+      document.getElementById('seqLengthSelect').addEventListener('change', (e) => {
+        activeSeqLength = parseInt(e.target.value, 10) || 128;
+        currentStep = -1;
+        renderSequencer();
+        renderDrumGrid();
+        showToast(`SEQUENCER SET TO ${activeSeqLength} STEPS (${activeSeqLength / 16} BARS)`);
+      });
+
+      document.getElementById('exportMidiBtn').addEventListener('click', exportPatternToMidi);
+
+      document.getElementById('drumEnableBtn').addEventListener('click', (e) => {
+        drumsEnabled = !drumsEnabled;
+        e.target.textContent = drumsEnabled ? 'DRUM ENGINE: ON' : 'DRUM ENGINE: OFF';
+        e.target.className = drumsEnabled
+          ? 'px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-extrabold text-xs'
+          : 'px-3 py-1 rounded-lg bg-slate-800 text-slate-400 font-bold text-xs';
+      });
+
+      document.getElementById('drumVolSlider').addEventListener('input', (e) => {
+        synth.params.drumVol = parseFloat(e.target.value);
+        synth.updateLiveEffects();
+      });
+
+      document.getElementById('genDrumGrooveBtn').addEventListener('click', () => {
+        drumPatterns.kick = Array.from({ length: MAX_SEQ_STEPS }, (_, i) => (i % 4 === 0 || (i % 16 === 14 && Math.random() > 0.45)) ? 1 : 0);
+        drumPatterns.snare = Array.from({ length: MAX_SEQ_STEPS }, (_, i) => (i % 8 === 4 || (i % 16 === 15 && Math.random() > 0.55)) ? 1 : 0);
+        drumPatterns.hat = Array.from({ length: MAX_SEQ_STEPS }, (_, i) => (i % 2 === 1 || Math.random() > 0.65) ? 1 : 0);
+        renderDrumGrid();
+        showToast(`🥁 GENERATED ${activeSeqLength}-STEP TECHNO DRUM GROOVE`);
+      });
+
+      const presetSelect = document.getElementById('presetSelect');
+      const presetKeys = Object.keys(PRESETS);
+
+      presetSelect.addEventListener('change', (e) => applyPreset(e.target.value));
+
+      document.getElementById('prevPresetBtn').addEventListener('click', () => {
+        const idx = (presetKeys.indexOf(presetSelect.value) - 1 + presetKeys.length) % presetKeys.length;
+        presetSelect.value = presetKeys[idx];
+        applyPreset(presetKeys[idx]);
+      });
+
+      document.getElementById('nextPresetBtn').addEventListener('click', () => {
+        const idx = (presetKeys.indexOf(presetSelect.value) + 1) % presetKeys.length;
+        presetSelect.value = presetKeys[idx];
+        applyPreset(presetKeys[idx]);
+      });
+
+      document.getElementById('randomizePatchBtn').addEventListener('click', () => {
+        synth.initAudio();
+        const waves = ['sawtooth', 'tb_square', 'hybrid_morph', 'square', 'triangle', 'spectral_harm'];
+        const filters = ['tbee303', 'lowpass', 'bandpass', 'highpass'];
+        const pedals = ['yellow_acid', 'fuzzy03', 'square_tube', 'metallicon'];
+
+        synth.params.osc1Wave = waves[Math.floor(Math.random() * waves.length)];
+        synth.params.osc2Wave = waves[Math.floor(Math.random() * waves.length)];
+        synth.params.osc1Detune = Math.round(Math.random() * 42);
+        synth.params.osc2Fm = Math.round(Math.random() * 350);
+        synth.params.filterModel = filters[Math.floor(Math.random() * filters.length)];
+        synth.params.filterCutoff = Math.round(180 + Math.random() * 4800);
+        synth.params.filterRes = +(1 + Math.random() * 17).toFixed(1);
+        synth.params.filterEnvAmt = Math.round(500 + Math.random() * 5500);
+        synth.params.pedalModel = pedals[Math.floor(Math.random() * pedals.length)];
+        synth.params.envDecay = +(0.08 + Math.random() * 0.9).toFixed(2);
+        synth.params.delayMix = +(Math.random() * 0.5).toFixed(2);
+        synth.params.reverbMix = +(Math.random() * 0.55).toFixed(2);
+
+        document.getElementById('osc1Wave').value = synth.params.osc1Wave;
+        document.getElementById('osc2Wave').value = synth.params.osc2Wave;
+        document.getElementById('filterModel').value = synth.params.filterModel;
+        document.getElementById('pedalModel').value = synth.params.pedalModel;
+
+        syncAllKnobsFromParams();
+        synth.updateLiveEffects();
+        showToast("🎲 QUANTUM DICE GENERATED NEW PATCH!");
+      });
+
+      document.getElementById('seqPlayBtn').addEventListener('click', toggleSequencer);
+      document.getElementById('panicBtn').addEventListener('click', () => {
+        synth.panic();
+        showToast("ALL NOTES OFF (PANIC)");
+      });
+
+      document.getElementById('masterVolSlider').addEventListener('input', (e) => {
+        synth.params.masterVol = parseFloat(e.target.value);
+        synth.updateLiveEffects();
+      });
+
+      document.getElementById('osc1Toggle').addEventListener('click', (e) => {
+        synth.params.osc1Enabled = !synth.params.osc1Enabled;
+        e.target.className = synth.params.osc1Enabled
+          ? 'px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-extrabold text-[10px]'
+          : 'px-2 py-0.5 rounded bg-slate-800 text-slate-500 font-extrabold text-[10px]';
+      });
+
+      document.getElementById('osc2Toggle').addEventListener('click', (e) => {
+        synth.params.osc2Enabled = !synth.params.osc2Enabled;
+        e.target.className = synth.params.osc2Enabled
+          ? 'px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-extrabold text-[10px]'
+          : 'px-2 py-0.5 rounded bg-slate-800 text-slate-500 font-extrabold text-[10px]';
+      });
+
+      document.getElementById('osc1Wave').addEventListener('change', (e) => synth.params.osc1Wave = e.target.value);
+      document.getElementById('osc1Oct').addEventListener('change', (e) => synth.params.osc1Oct = parseInt(e.target.value));
+      document.getElementById('osc2Wave').addEventListener('change', (e) => synth.params.osc2Wave = e.target.value);
+      document.getElementById('osc2Semi').addEventListener('change', (e) => synth.params.osc2Semi = parseInt(e.target.value));
+      document.getElementById('filterModel').addEventListener('change', (e) => synth.params.filterModel = e.target.value);
+      document.getElementById('pedalModel').addEventListener('change', (e) => {
+        synth.params.pedalModel = e.target.value;
+        synth.updateDistortionCurve();
+      });
+      document.getElementById('lfoTarget').addEventListener('change', (e) => synth.params.lfoTarget = e.target.value);
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => {
+            b.className = 'tab-btn px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-wide';
+          });
+          btn.className = 'tab-btn px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-extrabold text-xs tracking-wide';
+
+          document.querySelectorAll('.tab-content').forEach(tc => tc.classList.add('hidden'));
+          document.getElementById(btn.dataset.tab).classList.remove('hidden');
+        });
+      });
+
+      document.getElementById('genAcidPatternBtn').addEventListener('click', generateAcidRiff);
+      document.getElementById('clearPatternBtn').addEventListener('click', () => {
+        for (let i = 0; i < activeSeqLength; i++) {
+          steps[i].active = false;
+          steps[i].accent = false;
+          steps[i].slide = false;
+        }
+        renderSequencer();
+      });
+      document.getElementById('swingSlider').addEventListener('input', (e) => {
+        document.getElementById('swingVal').textContent = `${Math.round(parseFloat(e.target.value) * 100)}%`;
+      });
+
+      const scopeBtns = {
+        scopeModeWave: 'wave',
+        scopeModeFFT: 'fft',
+        scopeModeDual: 'hybrid'
+      };
+      Object.entries(scopeBtns).forEach(([id, mode]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', () => {
+          scopeMode = mode;
+          Object.keys(scopeBtns).forEach(bid => {
+            document.getElementById(bid).className = bid === id
+              ? 'px-2 py-0.5 text-[10px] font-mono-tech font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+              : 'px-2 py-0.5 text-[10px] font-mono-tech font-bold rounded bg-slate-800 text-slate-400';
+          });
+        });
+      });
+
+      const pitchWheel = document.getElementById('pitchWheel');
+      pitchWheel.addEventListener('input', (e) => {
+        synth.pitchBend = parseFloat(e.target.value);
+      });
+      pitchWheel.addEventListener('mouseup', () => {
+        pitchWheel.value = 0;
+        synth.pitchBend = 0;
+      });
+      pitchWheel.addEventListener('touchend', () => {
+        pitchWheel.value = 0;
+        synth.pitchBend = 0;
+      });
+
+      document.getElementById('modWheel').addEventListener('input', (e) => {
+        synth.modWheelVal = parseFloat(e.target.value);
+        synth.params.macroAcid = synth.modWheelVal;
+        syncAllKnobsFromParams();
+      });
+
+      document.getElementById('octDownBtn').addEventListener('click', () => {
+        synth.baseOctave = Math.max(1, synth.baseOctave - 1);
+        document.getElementById('kbdOctaveLabel').textContent = `C${synth.baseOctave}`;
+        buildPiano();
+      });
+      document.getElementById('octUpBtn').addEventListener('click', () => {
+        synth.baseOctave = Math.min(5, synth.baseOctave + 1);
+        document.getElementById('kbdOctaveLabel').textContent = `C${synth.baseOctave}`;
+        buildPiano();
+      });
+    });
+  </script>
+</body>
+</html>

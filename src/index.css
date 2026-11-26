@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+:root {
+  --bg-chassis: #090b10;
+  --bg-panel: #121621;
+  --bg-card: #181d2b;
+  --accent-cyan: #00f0ff;
+  --accent-amber: #ff9d00;
+  --accent-acid: #39ff14;
+  --accent-magenta: #ff2a85;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+}
+
+body.skin-acid {
+  --bg-chassis: #060b07;
+  --accent-cyan: #39ff14;
+  --accent-amber: #facc15;
+  --accent-magenta: #a3e635;
+}
+
+body.skin-crimson {
+  --bg-chassis: #10070a;
+  --accent-cyan: #ff2a55;
+  --accent-amber: #ff8c00;
+  --accent-magenta: #f43f5e;
+}
+
+body.skin-titanium {
+  --bg-chassis: #0d0f14;
+  --accent-cyan: #e2e8f0;
+  --accent-amber: #38bdf8;
+  --accent-magenta: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--bg-chassis);
+  color: #e2e8f0;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display-tech {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+.font-mono-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.synth-chassis {
+  background: radial-gradient(circle at 50% 0%, #192030 0%, var(--bg-chassis) 75%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.module-panel {
+  background: linear-gradient(180deg, #151a27 0%, #0f131d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.knob-dial {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: conic-gradient(from 220deg, #1f273a 0%, #0d111a 100%);
+  border: 2px solid #2c364f;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.09);
+  position: relative;
+  transition: border-color 0.15s ease;
+}
+
+.knob-container:hover .knob-dial,
+.knob-container:focus-visible .knob-dial {
+  border-color: var(--accent-cyan);
+}
+
+.knob-indicator {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 3px;
+  height: 11px;
+  background: var(--accent-cyan);
+  border-radius: 2px;
+  transform-origin: 50% 15px;
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.knob-acid .knob-indicator {
+  background: var(--accent-acid);
+  box-shadow: 0 0 8px var(--accent-acid);
+}
+
+.knob-amber .knob-indicator {
+  background: var(--accent-amber);
+  box-shadow: 0 0 8px var(--accent-amber);
+}
+
+.knob-magenta .knob-indicator {
+  background: var(--accent-magenta);
+  box-shadow: 0 0 8px var(--accent-magenta);
+}
+
+input[type="range"].synth-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #0c0f16;
+  height: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+input[type="range"].synth-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+input[type="range"].synth-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.piano-white {
+  background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+  border: 1px solid #475569;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.05s, background 0.05s;
+}
+
+.piano-white.active,
+.piano-white:active {
+  background: linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%);
+  transform: translateY(2px);
+}
+
+.piano-black {
+  background: linear-gradient(180deg, #1e293b 0%, #090d16 100%);
+  border: 1px solid #000;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  transition: transform 0.05s, background 0.05s;
+}
+
+.piano-black.active,
+.piano-black:active {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  transform: translateY(2px);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0d12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b354b;
+  border-radius: 3px;
+}

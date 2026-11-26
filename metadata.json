@@ -1,0 +1,6 @@
+{
+  "name": "Vortex Titan 6.0",
+  "description": "Flagship Web Audio synthesizer workstation with 3D-5D XY&Z morph pad, 128-step 303 & 909 sequencer, modulation matrix, and real-time Sounds ID.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
